@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import fs from 'fs';
+import path from 'path';
 
 const SETTINGS_ID = 'main_config';
+const SETTINGS_FILE = path.join(process.cwd(), 'data', 'offer-settings.json');
+
+function readLocalSettings(): any {
+  try {
+    if (!fs.existsSync(SETTINGS_FILE)) return null;
+    return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8'));
+  } catch { return null; }
+}
+
+function writeLocalSettings(data: any) {
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(data, null, 2));
+}
 
 const defaultSettings = {
   enabled: true,
@@ -20,32 +34,28 @@ export async function GET() {
   try {
     const db = await getDatabase();
     const settings = await db.collection('offer_settings').findOne({ configId: SETTINGS_ID });
-    
-    if (!settings) {
-      return NextResponse.json({ success: true, ...defaultSettings });
-    }
-    
-    return NextResponse.json({ success: true, ...settings });
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch settings' }, { status: 500 });
+    return NextResponse.json({ success: true, ...(settings || defaultSettings) });
+  } catch {
+    const local = readLocalSettings();
+    return NextResponse.json({ success: true, ...(local || defaultSettings) });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const db = await getDatabase();
-    
-    // Remove _id from body if present to avoid immutable field error during upsert
     const { _id, ...updateData } = body;
-    
-    await db.collection('offer_settings').updateOne(
+
+    try {
+      const db = await getDatabase();
+      await db.collection('offer_settings').updateOne(
         { configId: SETTINGS_ID },
         { $set: { ...updateData, configId: SETTINGS_ID } },
         { upsert: true }
-    );
-    
+      );
+    } catch {
+      writeLocalSettings(updateData);
+    }
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Database error:', error);
