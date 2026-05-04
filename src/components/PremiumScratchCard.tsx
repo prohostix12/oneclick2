@@ -92,12 +92,13 @@ export default function PremiumScratchCard({ onClaim, onClose }: PremiumScratchC
     };
 
     return (
-        <div className="psc-overlay">
+        <div className="psc-overlay" onClick={onClose}>
             <motion.div
                 className={`psc-container ${phase === 'teaser' ? 'teaser-mode' : ''}`}
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', damping: 20 }}
+                onClick={(e) => e.stopPropagation()}
             >
                 <div className="psc-bg-wrapper">
                     <div className="psc-modal-bg" />
