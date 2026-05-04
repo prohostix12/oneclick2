@@ -5,6 +5,7 @@ import { ChevronDown, ArrowRight, Phone, Mail, MapPin, Check } from 'lucide-reac
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ServiceMap from '@/app/components/ServiceMap';
+import EnquireNowModal from '@/components/EnquireNowModal';
 
 const cardReveal: Variants = {
   hidden: { 
@@ -36,65 +37,65 @@ const staggerContainer: Variants = {
 
 const services = [
   {
-    title: "Branding & Corporate Identity",
+    title: "Branding for everyone",
     image: "/signage-branding.png",
-    description: "Brand implementation, rollout & corporate identity applications",
-    details: ["Brand implementation & rollout", "Corporate identity applications", "Office branding & interior graphics", "Brand consistency across multiple locations"],
+    description: "We’ll help you create a look that people remember. No more generic designs—just a brand that feels like you.",
+    details: ["Professional logos", "Brand identity guides", "Office & interior branding", "Consistent look across all locations"],
     link: "/services/branding"
   },
   {
-    title: "Digital Printed Graphics",
+    title: "Big, bold printing",
     image: "/signage-digital-print.png",
-    description: "Large format printing & interior graphics",
-    details: ["Large format digital printing", "Wall, glass & window graphics", "Frosted film & privacy films", "Floor & promotional graphics", "Wallpaper & interior branding"],
+    description: "High-resolution prints that look sharp from across the street. Perfect for windows and massive banners.",
+    details: ["Large format printing", "Wall & window graphics", "Privacy films", "Stickers & floor graphics", "Custom wallpaper"],
     link: "/services/digital-graphics"
   },
   {
-    title: "Vehicle Graphics & Fleet Branding",
+    title: "Ads on the move",
     image: "/signage-vehicle.png",
-    description: "Full & partial vehicle wraps for mobile advertising",
-    details: ["Full & partial vehicle wraps", "Corporate fleet branding", "Reflective & safety graphics", "Promotional vehicle advertising"],
+    description: "Turn your car, van, or truck into a mobile billboard. One of the best ways to get seen all over the city.",
+    details: ["Full & partial wraps", "Corporate fleet branding", "Safety & reflective graphics", "Mobile advertising"],
     link: "/services/vehicle-branding"
   },
   {
-    title: "Signage Production & Installation",
+    title: "Signs that last",
     image: "/signage-production.png",
-    description: "Indoor & outdoor signage solutions",
-    details: ["Indoor & outdoor signage", "Illuminated & non-illuminated signboards", "3D letter signs (acrylic, metal, LED)", "Directional, wayfinding & safety signage", "Mall, retail & commercial signage"],
+    description: "Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.",
+    details: ["Outdoor signboards", "Indoor office signs", "3D illuminated letters", "Wayfinding signs", "Retail & mall signage"],
     link: "/services/signage"
   },
   {
-    title: "Exhibition, Display & POS",
+    title: "Pop-up displays",
     image: "/signage-exhibition.png",
-    description: "Exhibition stands, kiosks & point of sale displays",
-    details: ["Exhibition stands & kiosks", "Pop-up systems & backdrops", "Roll-up & X-banners", "Point of Sale (POS) & in-store displays"],
+    description: "Exhibition booths and kiosks that make people want to walk over and say hi.",
+    details: ["Custom exhibition stands", "Portable kiosks", "Pop-up backdrops", "Roll-up banners", "In-store displays"],
     link: "/services/exhibition"
   },
   {
-    title: "Cladding & Facade Solutions",
+    title: "Facade makeovers",
     image: "/signage-cladding.png",
-    description: "ACP cladding & architectural facade branding",
-    details: ["ACP cladding works", "Aluminum & composite panel cladding", "Shopfront & facade branding", "Decorative architectural finishes", "Signage-integrated facade solutions"],
+    description: "Give your building a fresh, modern look. Turning old storefronts into local landmarks.",
+    details: ["ACP cladding", "Aluminum paneling", "Shopfront branding", "Modern architectural finishes", "Integrated signage"],
     link: "/services/cladding"
   }
 ];
 
 const accordionItems = [
   {
-    title: "High-Impact Visibility",
-    content: "Our strategic placements ensure maximum exposure for your brand across high-traffic areas in the UAE."
+    title: "You'll be seen",
+    content: "We pick the best spots so your brand gets the most attention from people passing by."
   },
   {
-    title: "Prime Locations",
-    content: "Access to premium advertising spaces in Dubai, Abu Dhabi, and across all seven emirates."
+    title: "All over the UAE",
+    content: "From the busy streets of Dubai to the main hubs in Abu Dhabi, we've got you covered."
   },
   {
-    title: "Fast Execution",
-    content: "Quick turnaround times from concept to installation, ensuring your campaigns launch on schedule."
+    title: "No waiting around",
+    content: "We work quickly to get your campaign live so you can start seeing results sooner."
   },
   {
-    title: "End-to-End Service",
-    content: "Complete support from design and production to installation and maintenance."
+    title: "We handle everything",
+    content: "From the first design to the final install, we take care of the hard work for you."
   }
 ];
 
@@ -102,6 +103,7 @@ export default function ServicesPage() {
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const [currentYear, setCurrentYear] = useState<number | null>(null);
   const [dbServices, setDbServices] = useState<any[]>([]);
+  const [enquireService, setEnquireService] = useState<string | null>(null);
 
   // 3D Parallax Mouse Tracking
   const mouseX = useMotionValue(0.5);
@@ -661,6 +663,14 @@ export default function ServicesPage() {
 
       `}</style>
 
+      {enquireService && (
+        <EnquireNowModal
+          serviceName={enquireService}
+          source="services-page"
+          onClose={() => setEnquireService(null)}
+        />
+      )}
+
       <div className="services-page">
         {/* Hero Section */}
         <section className="hero-services" onMouseMove={handleHeroMouseMove}>
@@ -691,7 +701,7 @@ export default function ServicesPage() {
               animate={{ z: 0, rotateY: 0, opacity: 1 }}
               transition={{ duration: 1.2, delay: 0.4, type: "spring", bounce: 0.4 }}
             >
-              Stand Out <br />
+              Get Noticed <br />
               Every<motion.span 
                 className="highlight"
                 animate={{ 
@@ -710,7 +720,7 @@ export default function ServicesPage() {
               animate={{ opacity: 1, y: 0, z: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              High-impact outdoor advertising designed to make your brand visible, memorable, and impossible to ignore across the places that matter most.
+              We’re here to help you get your business in front of the right people. No stress, no confusion—just high-quality ads that work.
             </motion.p>
           </motion.div>
         </section>
@@ -725,10 +735,10 @@ export default function ServicesPage() {
           >
             <motion.div className="section-header" variants={cardReveal}>
               <h2 className="section-title">
-                Our <span className="italic">Services</span>
+                What we <span className="italic">do</span>
               </h2>
               <p className="section-subtitle">
-                Flexible advertising solutions tailored to your brand.
+                Everything you need to make your business look its best.
               </p>
             </motion.div>
 
@@ -789,7 +799,33 @@ export default function ServicesPage() {
                   <div className="service-divider"></div>
 
                   <p className="service-desc">{service.description}</p>
-                  
+
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setEnquireService(service.title); }}
+                    style={{
+                      alignSelf: 'flex-start',
+                      marginTop: 'auto',
+                      marginBottom: '3.5rem',
+                      padding: '0.65rem 1.5rem',
+                      background: '#e61e25',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      fontFamily: 'inherit',
+                      zIndex: 20,
+                      position: 'relative',
+                      boxShadow: '0 4px 14px rgba(230, 30, 37, 0.35)',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#ff2d35'; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(230, 30, 37, 0.55)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#e61e25'; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 14px rgba(230, 30, 37, 0.35)'; }}
+                  >
+                    Enquire Now
+                  </button>
+
                   <div className="service-scallop">
                     <div className="service-number">
                       {String(index + 1).padStart(2, '0')}

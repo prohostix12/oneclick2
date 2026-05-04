@@ -3,8 +3,8 @@ import "./globals.css";
 import ClientLayoutWrapper from "./components/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
-  title: "One Click Advertisement | Premium Outdoor Advertising in UAE",
-  description: "High-impact outdoor advertising solutions across prime locations in the UAE. From billboards to vehicle branding, we make brands impossible to ignore.",
+  title: "One Click Advertisement | Get Noticed Across the UAE",
+  description: "We make it easy to get your business seen across the UAE. From vibrant signs to vehicle wraps, we handle every detail of your outdoor advertising journey.",
   keywords: ["outdoor advertising", "billboards UAE", "signage Dubai", "vehicle branding", "One Click Advertisement"],
 };
 

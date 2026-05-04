@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, FormEvent, useEffect } from 'react';
-import { motion, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 import AnimatedHeroHeading from '@/components/AnimatedHeroHeading';
 import MysteryBoxSection from '@/components/MysteryBoxSection';
 import PremiumScratchCard from '@/components/PremiumScratchCard';
+import EnquireNowModal from '@/components/EnquireNowModal';
 
 import './black-cards.css';
 import './home.css';
@@ -100,6 +101,21 @@ const staggerContainer: Variants = {
  * - useModalVersion: true to use old modal, false for new inline
  */
 
+const heroServices = [
+  { name: 'Branding', img: '/signage-branding.png', link: '/services/branding' },
+  { name: 'Digital Printing', img: '/signage-digital-print.png', link: '/services/digital-graphics' },
+  { name: 'Vehicle Branding', img: '/signage-vehicle.png', link: '/services/vehicle-branding' },
+  { name: 'Signage', img: '/signage-production.png', link: '/services/signage' },
+  { name: 'Exhibition Stands', img: '/signage-exhibition.png', link: '/services/exhibition' },
+  { name: 'Facade Cladding', img: '/signage-cladding.png', link: '/services/cladding' },
+];
+
+// Two groups of 4 for the paginated carousel
+const carouselPages = [
+  heroServices.slice(0, 4),
+  [...heroServices.slice(4), ...heroServices.slice(0, 2)],
+];
+
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
@@ -111,6 +127,9 @@ export default function Home() {
   const [currentLocationIndex, setCurrentLocationIndex] = useState(0);
   const [openBrandAccordion, setOpenBrandAccordion] = useState<number | null>(0);
   const [isScratchCardOpen, setIsScratchCardOpen] = useState(false);
+  const [enquireItem, setEnquireItem] = useState<string | null>(null);
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const [carouselPage, setCarouselPage] = useState(0);
   
 
 
@@ -123,8 +142,9 @@ export default function Home() {
   
   const rotateX = useTransform(springY, [0, 1], [10, -10]);
   const rotateY = useTransform(springX, [0, 1], [-10, 10]);
-  const bgX = useTransform(springX, [0, 1], [-20, 20]);
-  const bgY = useTransform(springY, [0, 1], [-20, 20]);
+  // bgX / bgY kept for when the building-image background is restored
+  // const bgX = useTransform(springX, [0, 1], [-20, 20]);
+  // const bgY = useTransform(springY, [0, 1], [-20, 20]);
 
   const handleHeroMouseMove = (e: React.MouseEvent) => {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -153,6 +173,20 @@ export default function Home() {
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroSlideIndex((prev) => (prev + 1) % heroServices.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCarouselPage((prev) => (prev + 1) % carouselPages.length);
+    }, 3500);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -191,11 +225,19 @@ export default function Home() {
   return (
     <>
       {isScratchCardOpen && (
-        <PremiumScratchCard 
+        <PremiumScratchCard
           onClose={() => setIsScratchCardOpen(false)}
           onClaim={() => {
             console.log("Offer Claimed - Showing success message");
           }}
+        />
+      )}
+
+      {enquireItem && (
+        <EnquireNowModal
+          serviceName={enquireItem}
+          source="home-page"
+          onClose={() => setEnquireItem(null)}
         />
       )}
       
@@ -203,16 +245,75 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero-section" onMouseMove={handleHeroMouseMove}>
-        <motion.div 
+
+        {/* ── ORIGINAL building image — uncomment to restore ──────────────────
+        <motion.div
           className="hero-background"
           style={{ x: bgX, y: bgY }}
         >
-          <img 
-            src="/dubai-hero-building.jpg" 
-            alt="One Click Advertisement - Dubai Professional Buildings" 
+          <img
+            src="/dubai-hero-building.jpg"
+            alt="One Click Advertisement - Dubai Professional Buildings"
           />
         </motion.div>
+        ─────────────────────────────────────────────────────────────────────── */}
+
+        {/* Service image slideshow background */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+          {heroServices.map((service, index) => (
+            <motion.div
+              key={service.link}
+              animate={{
+                opacity: heroSlideIndex === index ? 1 : 0,
+                scale:   heroSlideIndex === index ? 1 : 1.06,
+              }}
+              initial={{ opacity: 0, scale: 1.06 }}
+              transition={{ duration: 1.4, ease: 'easeInOut' }}
+              style={{ position: 'absolute', inset: 0 }}
+            >
+              <img
+                src={service.img}
+                alt={service.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.72) saturate(1.15)' }}
+              />
+            </motion.div>
+          ))}
+        </div>
+
         <div className="hero-overlay"></div>
+
+        {/* Slide indicators — must be above overlay (z-index > 1) and above hero-content (z-index > 2), below claim-btn */}
+        <div style={{ position: 'absolute', bottom: '11rem', left: '2rem', zIndex: 4, display: 'flex', flexDirection: 'column', gap: '0.55rem', pointerEvents: 'auto' }}>
+          {heroServices.map((service, index) => (
+            <div
+              key={index}
+              onClick={() => setHeroSlideIndex(index)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                cursor: 'pointer',
+                opacity: heroSlideIndex === index ? 1 : 0.45,
+                transition: 'opacity 0.4s ease',
+              }}
+            >
+              <div style={{
+                width: heroSlideIndex === index ? '28px' : '6px',
+                height: '6px',
+                borderRadius: '3px',
+                background: heroSlideIndex === index ? '#e61e25' : 'rgba(255,255,255,0.8)',
+                transition: 'all 0.4s ease',
+                boxShadow: heroSlideIndex === index ? '0 0 10px rgba(230,30,37,0.8)' : 'none',
+                flexShrink: 0,
+              }} />
+              {heroSlideIndex === index && (
+                <span style={{ color: 'white', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', textShadow: '0 1px 6px rgba(0,0,0,0.9)', whiteSpace: 'nowrap' }}>
+                  {service.name}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
 
         <motion.div 
           className="hero-content"
@@ -225,14 +326,11 @@ export default function Home() {
             onReveal={() => {}}
             onTagClick={() => {}}
           />
-          <motion.p variants={fadeInUp}>
-            We create high-impact advertising that makes your brand visible, memorable, and impossible to ignore.
-          </motion.p>
-          <motion.div className="hero-buttons" variants={fadeInUp}>
+          <motion.div className="hero-buttons" variants={fadeInUp} style={{ marginBottom: '2rem' }}>
             <Link href="/contact#campaign" className="btn btn-primary">
-              Start Your Campaign <ArrowRight size={20} />
+              Let's build your campaign <ArrowRight size={20} />
             </Link>
-            <Link href="/contact" className="btn btn-secondary">
+            <Link href="/about" className="btn btn-secondary">
               Learn More <ArrowRight size={20} />
             </Link>
           </motion.div>
@@ -375,6 +473,48 @@ export default function Home() {
               </div>
           </motion.div>
         </motion.div>
+
+        {/* Services Paginated Carousel */}
+        <div className="hero-services-strip">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={carouselPage}
+              className="hero-services-ticker"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -100, opacity: 0 }}
+              transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+            >
+              {carouselPages[carouselPage].map((service, i) => (
+                <Link key={i} href={service.link} className="hero-service-chip">
+                  <img src={service.img} alt={service.name} className="hero-service-chip-img" />
+                  <div className="hero-service-chip-overlay" />
+                  <span className="hero-service-dot" />
+                  <div className="hero-service-chip-name">{service.name}</div>
+                </Link>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Page dots */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem', paddingBottom: '0.25rem' }}>
+            {carouselPages.map((_, i) => (
+              <div
+                key={i}
+                onClick={() => setCarouselPage(i)}
+                style={{
+                  width: carouselPage === i ? '20px' : '6px',
+                  height: '6px',
+                  borderRadius: '3px',
+                  background: carouselPage === i ? '#e61e25' : 'rgba(255,255,255,0.4)',
+                  cursor: 'pointer',
+                  transition: 'all 0.35s ease',
+                  boxShadow: carouselPage === i ? '0 0 8px rgba(230,30,37,0.7)' : 'none',
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </section>
 
 
@@ -398,10 +538,10 @@ export default function Home() {
               color: '#e61e25',
               fontWeight: 950,
               textTransform: 'uppercase'
-            }}>unmissable brand</span> presence
+            }}>signs that people actually see</span>
           </motion.h2>
           <motion.p className="we-build-subtitle" variants={slideDown}>
-            From concept to execution, we deliver advertising solutions that capture attention and drive results.
+            From simple shop signs to massive city-wide campaigns, we help you get your brand in front of the right people.
           </motion.p>
           
           <motion.div className="portfolio-grid" variants={staggerContainer}>
@@ -409,43 +549,43 @@ export default function Home() {
                { 
                 id: 1, 
                 icon: <MapPin size={32} color="#e61e25" />, 
-                title: 'Branding & Corporate Identity',
-                desc: 'Brand implementation, rollout & corporate identity applications',
+                title: 'Branding for everyone',
+                desc: 'We’ll help you create a look that people remember. (Think: Like that local cafe everyone knows by its logo.)',
                 image: '/signage-branding.png'
               },
               { 
                 id: 2, 
                 icon: <Mail size={32} color="#e61e25" />, 
-                title: 'Digital Printed Graphics',
-                desc: 'Large format printing & interior graphics',
+                title: 'Big, bold printing',
+                desc: 'High-resolution prints that look sharp from across the street. Perfect for windows and banners.',
                 image: '/signage-digital-print.png'
               },
               { 
                 id: 3, 
                 icon: <Phone size={32} color="#e61e25" />, 
-                title: 'Vehicle Graphics & Fleet Branding',
-                desc: 'Full & partial vehicle wraps for mobile advertising',
+                title: 'Ads on the move',
+                desc: 'Turn your car or van into a mobile billboard. One of the best ways to get seen all over town.',
                 image: '/signage-vehicle.png'
               },
               { 
                 id: 4, 
                 icon: <ArrowRight size={32} color="#e61e25" />, 
-                title: 'Signage Production & Installation',
-                desc: 'Indoor & outdoor signage solutions',
+                title: 'Signs that last',
+                desc: 'Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.',
                 image: '/signage-production.png'
               },
               { 
                 id: 5, 
                 icon: <MapPin size={32} color="#e61e25" />, 
-                title: 'Exhibition, Display & POS',
-                desc: 'Exhibition stands, kiosks & point of sale displays',
+                title: 'Pop-up displays',
+                desc: 'Exhibition booths and kiosks that make people want to walk over and say hi.',
                 image: '/signage-exhibition.png'
               },
               { 
                 id: 6, 
                 icon: <ArrowRight size={32} color="#e61e25" />, 
-                title: 'Cladding & Facade Solutions',
-                desc: 'ACP cladding & architectural facade branding',
+                title: 'Facade makeovers',
+                desc: 'Give your building a fresh, modern look. Turning old storefronts into local landmarks.',
                 image: '/signage-cladding.png'
               }
             ].map((item, index) => (
@@ -472,7 +612,31 @@ export default function Home() {
 
                 <div className="portfolio-divider"></div>
                 
-                <p className="portfolio-desc">{item.desc}</p>
+                <p className="portfolio-desc" style={{ marginBottom: '1.4rem' }}>{item.desc}</p>
+
+                <button
+                  onClick={() => setEnquireItem(item.title)}
+                  style={{
+                    alignSelf: 'flex-start',
+                    padding: '0.6rem 1.3rem',
+                    background: 'transparent',
+                    color: '#e61e25',
+                    border: '2px solid #e61e25',
+                    borderRadius: '8px',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontFamily: 'inherit',
+                    marginBottom: '3.5rem',
+                    position: 'relative',
+                    zIndex: 20,
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#e61e25'; (e.currentTarget as HTMLButtonElement).style.color = 'white'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#e61e25'; }}
+                >
+                  Enquire Now
+                </button>
 
                 <div className="portfolio-scallop">
                   <div className="portfolio-number">
@@ -504,9 +668,9 @@ export default function Home() {
             className="for-brands-content" 
             variants={swipeLeft}
           >
-            <h2>For Brands</h2>
+            <h2>For Businesses Large & Small</h2>
             <p>
-              Outdoor advertising made simple for modern brands. Reach the right audience with high-impact placements across cities.
+              We make outdoor advertising easy for everyone. Whether you're a startup or a global brand, we help you find the best spots to get noticed across the city.
             </p>
           </motion.div>
           
@@ -516,20 +680,20 @@ export default function Home() {
           >
             {[
               { 
-                title: 'End-to-End Solutions', 
-                desc: 'Complete advertising solutions from concept to installation, handling every detail of your campaign.' 
+                title: 'We handle the hard stuff', 
+                desc: 'From the first sketch to the final screw, we take care of everything so you don\'t have to worry about the details.' 
               },
               { 
-                title: 'Premium Quality', 
-                desc: 'High-quality materials and professional execution that withstand UAE climate while maintaining aesthetics.' 
+                title: 'Quality you can trust', 
+                desc: 'We use premium materials that stay looking fresh, even in the middle of a UAE summer.' 
               },
               { 
-                title: 'UAE Compliance', 
-                desc: 'Fully compliant with RTA and local regulations, ensuring smooth approvals and installations.' 
+                title: 'No permit headaches', 
+                desc: 'We know the RTA and local rules inside out. We\'ll handle all the paperwork and approvals for you.' 
               },
               { 
-                title: 'Reliable Execution', 
-                desc: 'On-time delivery and professional installation across Dubai, Abu Dhabi, and the Northern Emirates.' 
+                title: 'Always on time', 
+                desc: 'When we say it\'ll be ready, it\'ll be ready. We deliver and install across the UAE, exactly when you need us.' 
               }
             ].map((item, index) => (
               <div
@@ -685,9 +849,9 @@ export default function Home() {
             variants={swipeRight}
             whileHover={{ x: -5, transition: { duration: 0.6 } }}
           >
-            <h2>Prime Locations</h2>
+            <h2>Right where your customers are</h2>
             <p>
-              Strategically placed across high-traffic urban areas to maximize visibility and impact for your brand. From Dubai's iconic landmarks to Abu Dhabi's business districts, we cover all major UAE locations.
+              We’ve picked the best spots in high-traffic areas to make sure people see your brand. From the busiest streets in Dubai to the main hubs in Abu Dhabi, we’ve got the UAE covered.
             </p>
           </motion.div>
         </motion.div>
@@ -710,12 +874,12 @@ export default function Home() {
             variants={swipeLeft}
             whileHover={{ x: 5, transition: { duration: 0.6 } }}
           >
-            <h2>We reach across cities</h2>
+            <h2>We’re all over the city</h2>
             <p>
-              With presence in Dubai, Abu Dhabi, and across the UAE, we bring your brand to millions of potential customers every day.
+              With teams in Dubai, Abu Dhabi, and across the UAE, we’re ready to help you reach your customers wherever they are.
             </p>
             <Link href="/contact" className="btn btn-primary">
-              Get Started <ArrowRight size={20} />
+              Let's chat <ArrowRight size={20} />
             </Link>
           </motion.div>
           <motion.div 
@@ -830,7 +994,7 @@ export default function Home() {
                     lineHeight: 1.2,
                     color: 'white'
                   }}>
-                    Built for Visibility
+                    Get Seen
                   </h2>
                   <p style={{ 
                     color: 'rgba(255, 255, 255, 0.8)', 
@@ -838,7 +1002,7 @@ export default function Home() {
                     lineHeight: 1.8,
                     marginBottom: '2rem'
                   }}>
-                    We help brands stand out through high-impact outdoor advertising across real-world environments. From storefront displays to large-scale city campaigns, our focus is simple – make your brand impossible to ignore.
+                    We’re here to help you get your business in front of the right people. We design, print, and install high-quality ads that people actually notice while they're out and about. No stress, no confusion.
                   </p>
                   <Link 
                     href="/about" 
@@ -853,7 +1017,7 @@ export default function Home() {
                       transition: 'all 0.3s ease'
                     }}
                   >
-                    Learn more <ArrowRight size={20} />
+                    See our story <ArrowRight size={20} />
                   </Link>
                 </div>
                 <div className="leaf-image-container">
@@ -877,7 +1041,7 @@ export default function Home() {
                     lineHeight: 1.2,
                     color: 'white'
                   }}>
-                    Nationwide Coverage
+                    We’ve got the UAE covered
                   </h2>
                   <p style={{ 
                     color: 'rgba(255, 255, 255, 0.8)', 
@@ -885,7 +1049,7 @@ export default function Home() {
                     lineHeight: 1.8,
                     marginBottom: '2rem'
                   }}>
-                    With strategic presence across all seven emirates, we deliver your message to millions. From Dubai's bustling streets to Abu Dhabi's corporate districts, our network ensures maximum exposure for your brand across the UAE.
+                    Whether you're looking to reach people on the main streets of Dubai or in the business hubs of Abu Dhabi, we’ve got spots in all seven emirates. Your message goes exactly where it needs to be.
                   </p>
                   <Link 
                     href="/contact" 
@@ -900,7 +1064,7 @@ export default function Home() {
                       transition: 'all 0.3s ease'
                     }}
                   >
-                    Get in touch <ArrowRight size={20} />
+                    Drop us a message <ArrowRight size={20} />
                   </Link>
                 </div>
                 <div className="leaf-image-container">
@@ -924,15 +1088,15 @@ export default function Home() {
                     lineHeight: 1.2,
                     color: 'white'
                   }}>
-                    Complete Solutions
+                    Everything you need
                   </h2>
                   <p style={{ 
-                    color: '#666666', 
+                    color: 'rgba(255, 255, 255, 0.8)', 
                     fontSize: '1.1rem', 
                     lineHeight: 1.8,
                     marginBottom: '2rem'
                   }}>
-                    From concept to installation, we provide end-to-end advertising solutions. Our services include branding, digital graphics, vehicle wraps, signage production, and facade cladding – all designed to elevate your brand presence.
+                    From the first sketch to the final install, we handle it all. Branding, printing, vehicle wraps, and signs—we make sure your business looks professional and gets noticed.
                   </p>
                   <Link 
                     href="/services" 
@@ -947,7 +1111,7 @@ export default function Home() {
                       transition: 'all 0.3s ease'
                     }}
                   >
-                    View services <ArrowRight size={20} />
+                    See what we can do <ArrowRight size={20} />
                   </Link>
                 </div>
                 <div className="leaf-image-container">
@@ -999,14 +1163,14 @@ export default function Home() {
           style={{ position: 'relative', zIndex: 2, textAlign: 'center', color: 'white', padding: 'clamp(3rem, 6vw, 4rem) clamp(1.5rem, 4vw, 2rem)', maxWidth: '900px', width: '100%' }}
         >
           <motion.h2 variants={bounceInDown} style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', fontWeight: 900, marginBottom: '1.5rem', lineHeight: 1.2 }}>
-            Ready to make your brand <span style={{ fontStyle: 'italic' }}>impossible to ignore?</span>
+            Ready to get your brand <span style={{ fontStyle: 'italic' }}>really noticed?</span>
           </motion.h2>
           <motion.p variants={slideDown} style={{ color: 'rgba(255,255,255,0.9)', marginBottom: '2rem', fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', maxWidth: '700px', margin: '0 auto 2rem auto', lineHeight: 1.6 }}>
-            Launch your outdoor campaign with high-impact placements across prime locations - fast, simple, and effective.
+            No pressure, let's just have a quick chat about your ideas. We'll help you figure out the best way to stand out.
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Link href="/contact#campaign" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', padding: '1rem 2.5rem', background: '#e61e25', color: 'white', fontWeight: 700, borderRadius: '8px', textDecoration: 'none', transition: 'all 0.3s ease', fontSize: '1rem', boxShadow: '0 4px 20px rgba(230,30,37,0.4)' }}>
-              Start your campaign <ArrowRight size={20} />
+              Let's talk <ArrowRight size={20} />
             </Link>
           </motion.div>
         </motion.div>

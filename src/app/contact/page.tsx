@@ -579,7 +579,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="contact-hero-title">Contact<br /><span style={{ color: '#e61e25' }}>Us</span></h1>
+              <h1 className="contact-hero-title">CONTACT<br /><span style={{ color: '#e61e25' }}>US</span></h1>
             </motion.div>
 
             <motion.div 
@@ -589,12 +589,10 @@ export default function ContactPage() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <p className="contact-hero-text">
-                Partner with Dubai's leading advertising experts to create high-impact visual communications that resonate.
-                From strategic brand identity to massive digital billboard solutions, we transform your vision into 
-                unforgettable urban experiences that bring your brand into the spotlight.
+                Whether you have a big project in mind or just a small question, we're here to help. Reach out and let's figure out the best way to get your brand noticed across the UAE.
               </p>
               <Link href="#campaign" className="hero-cta-button">
-                Start Your Campaign
+                Let's talk about your ideas
               </Link>
             </motion.div>
           </motion.div>
@@ -621,8 +619,8 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2>Get<br /><span className="italic">In Touch</span></h2>
-              <p>Reach out to us for enquiries, support, or to start your advertising campaign.</p>
+              <h2>Let's<br /><span className="italic">Chat</span></h2>
+              <p>We’d love to hear from you. Reach out for a quote, some advice, or just to say hi.</p>
             </motion.div>
 
             <motion.div 
@@ -659,8 +657,8 @@ export default function ContactPage() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2>Start Your <span className="italic">Campaign</span></h2>
-            <p className="campaign-subtitle">Tell us about your requirements and we'll get back to you quickly</p>
+            <h2>Send us a <span className="italic">message</span></h2>
+            <p className="campaign-subtitle">Tell us what you're looking for and we'll get back to you quickly</p>
           </motion.div>
 
           <div className="form-wrapper">
@@ -732,13 +730,13 @@ export default function ContactPage() {
                     onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                     required
                   >
-                    <option value="">Service (Brand Identity)</option>
-                    <option value="branding">Brand Identity</option>
-                    <option value="digital-graphics">Digital Graphics</option>
-                    <option value="vehicle-graphics">Vehicle Graphics</option>
-                    <option value="signage">Signage</option>
-                    <option value="exhibition">Exhibition & POS</option>
-                    <option value="cladding">Cladding & Facade</option>
+                    <option value="">What do you need help with?</option>
+                    <option value="branding">Branding for everyone</option>
+                    <option value="digital-graphics">Big, bold printing</option>
+                    <option value="vehicle-graphics">Ads on the move</option>
+                    <option value="signage">Signs that last</option>
+                    <option value="exhibition">Pop-up displays</option>
+                    <option value="cladding">Facade makeovers</option>
                   </select>
                 </motion.div>
                 <motion.div variants={fadeInUp}>

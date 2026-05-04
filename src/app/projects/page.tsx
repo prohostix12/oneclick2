@@ -10,6 +10,7 @@ import {
     Megaphone
 } from 'lucide-react';
 import PremiumScratchCard from '@/components/PremiumScratchCard';
+import EnquireNowModal from '@/components/EnquireNowModal';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -125,6 +126,7 @@ function ProjectsContent() {
     const [dynamicProjects, setDynamicProjects] = useState<Project[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isScratchCardOpen, setIsScratchCardOpen] = useState(false);
+    const [enquireProject, setEnquireProject] = useState<string | null>(null);
 
     // 3D Parallax Mouse Tracking
     const mouseX = useMotionValue(0.5);
@@ -816,18 +818,46 @@ function ProjectsContent() {
                                             >
                                                 {project.title}
                                             </motion.h2>
-                                            <motion.p 
+                                            <motion.p
                                                 className="cluster-desc"
                                                 initial={{ opacity: 0, y: 20 }}
                                                 whileInView={{ opacity: 1, y: 0 }}
                                                 viewport={{ once: true }}
-                                                transition={{ 
-                                                    duration: 0.8, 
+                                                transition={{
+                                                    duration: 0.8,
                                                     delay: Math.min(idx * 0.25, 1.0) + 0.8
                                                 }}
                                             >
                                                 {project.description}
                                             </motion.p>
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 15 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 0.6, delay: Math.min(idx * 0.25, 1.0) + 1.0 }}
+                                                style={{ marginTop: '1.8rem' }}
+                                            >
+                                                <button
+                                                    onClick={() => setEnquireProject(project.title)}
+                                                    style={{
+                                                        padding: '0.7rem 1.6rem',
+                                                        background: '#e61e25',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        borderRadius: '8px',
+                                                        fontWeight: 700,
+                                                        fontSize: '0.95rem',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.3s ease',
+                                                        fontFamily: 'inherit',
+                                                        boxShadow: '0 4px 14px rgba(230, 30, 37, 0.35)',
+                                                    }}
+                                                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#ff2d35'; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(230, 30, 37, 0.55)'; }}
+                                                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#e61e25'; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 14px rgba(230, 30, 37, 0.35)'; }}
+                                                >
+                                                    Enquire Now
+                                                </button>
+                                            </motion.div>
                                         </motion.div>
                                         <motion.div 
                                             className={`cluster-images ${project.images.length === 1 ? 'single' : ''} ${project.isSmall ? 'small' : ''}`}
@@ -941,8 +971,16 @@ function ProjectsContent() {
 
 
             {isScratchCardOpen && (
-                <PremiumScratchCard 
-                    onClose={() => setIsScratchCardOpen(false)} 
+                <PremiumScratchCard
+                    onClose={() => setIsScratchCardOpen(false)}
+                />
+            )}
+
+            {enquireProject && (
+                <EnquireNowModal
+                    serviceName={enquireProject}
+                    source="projects-page"
+                    onClose={() => setEnquireProject(null)}
                 />
             )}
         </div>

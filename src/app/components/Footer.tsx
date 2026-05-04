@@ -20,12 +20,12 @@ export default function Footer() {
           <div>
             <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '2.5rem', color: 'white', letterSpacing: '-0.5px' }}>Services</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Brand Identity</Link></li>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Digital Printing</Link></li>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Vehicle Branding</Link></li>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Display Solutions</Link></li>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Signages</Link></li>
-              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Façade & Cladding</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Branding for everyone</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Big, bold printing</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Ads on the move</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Pop-up displays</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Signs that last</Link></li>
+              <li><Link href="/services" style={{ color: '#888', textDecoration: 'none', fontSize: '1rem', transition: 'color 0.3s' }}>Facade makeovers</Link></li>
             </ul>
           </div>
 

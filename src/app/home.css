@@ -34,6 +34,95 @@
   z-index: 1;
 }
 
+/* Services Ticker Strip */
+.hero-services-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 3.5rem 0 1.2rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 55%, transparent 100%);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.hero-services-ticker {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.hero-service-chip {
+  position: relative;
+  width: 155px;
+  height: 105px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.12);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  display: block;
+}
+
+.hero-service-chip:hover {
+  border-color: #e61e25;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 28px rgba(230,30,37,0.5);
+}
+
+.hero-service-chip-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.65);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.hero-service-chip:hover .hero-service-chip-img {
+  filter: brightness(0.85);
+  transform: scale(1.06);
+}
+
+.hero-service-chip-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 65%, transparent 100%);
+}
+
+.hero-service-chip-name {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 0.7rem;
+  right: 0.7rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1.2;
+}
+
+.hero-service-dot {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e61e25;
+  box-shadow: 0 0 10px rgba(230,30,37,0.9), 0 0 20px rgba(230,30,37,0.4);
+  animation: heroServicePulse 2s ease-in-out infinite;
+}
+
+@keyframes heroServicePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.7; }
+}
+
 .hero-content {
   position: relative;
   z-index: 2;

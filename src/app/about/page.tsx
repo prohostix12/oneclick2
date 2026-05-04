@@ -72,28 +72,28 @@ export default function AboutPage() {
 
   const processSteps = [
     { 
-      title: "Plan", 
+      title: "Say Hi", 
       icon: <Target size={30} />, 
       image: "/signage-branding.png",
-      desc: "We understand your goals and recommend the right placements." 
+      desc: "Tell us what you're thinking, and we'll help you find the best approach." 
     },
     { 
-      title: "Design", 
+      title: "The Design", 
       icon: <Palette size={30} />, 
       image: "/signage-digital-print.png",
-      desc: "We create visuals that match your brand and campaign needs." 
+      desc: "We work together on a design that looks great and gets your message across." 
     },
     { 
-      title: "Execute", 
+      title: "We Build It", 
       icon: <Settings size={30} />, 
       image: "/signage-production.png",
-      desc: "We manage production and installation across selected locations." 
+      desc: "Our team handles the printing and building. We even take care of the permits." 
     },
     { 
-      title: "Launch", 
+      title: "Go Live", 
       icon: <Rocket size={30} />, 
       image: "/signage-exhibition.png",
-      desc: "Your campaign goes live and reaches real audiences." 
+      desc: "We install everything for you. You sit back and watch your brand come to life." 
     }
   ];
 
@@ -660,7 +660,7 @@ export default function AboutPage() {
               animate={{ z: 0, opacity: 1 }}
               transition={{ duration: 1.0, delay: 0.3 }}
             >
-              Transforming Ideas into <motion.span
+              Helping your brand <motion.span
                 animate={{ 
                     textShadow: [
                         "0px 0px 10px rgba(230,30,37,0.4)",
@@ -669,7 +669,7 @@ export default function AboutPage() {
                     ]
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >Visual Impact</motion.span>
+              >really stand out</motion.span>
             </motion.h1>
             <motion.p 
               className="hero-desc"
@@ -677,7 +677,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0, z: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
             >
-              One Click Advertisement is a full-service advertising and branding company delivering end-to-end visual communication solutions across the UAE.
+              We’re a team of experts dedicated to making sure your business gets seen across the UAE—simply, quickly, and without the stress.
             </motion.p>
           </motion.div>
         </section>
@@ -692,15 +692,15 @@ export default function AboutPage() {
               viewport={{ once: true }}
               variants={staggerContainer}
             >
-              <motion.h2 variants={fadeInUp}>About US</motion.h2>
+              <motion.h2 variants={fadeInUp}>A bit about us</motion.h2>
               <motion.p variants={fadeInUp}>
-                We are a UAE-based advertising and branding solutions company delivering high-quality visual communication services to businesses across Dubai, Abu Dhabi, Sharjah, Ajman, and the Northern Emirates.
+                We’re here to help you get your business in front of the right people. We design, print, and install high-quality ads that people actually notice while they're out and about.
               </motion.p>
               <motion.p variants={fadeInUp}>
-                We specialize in premium signage production, branding, digital printed graphics, facade cladding, and vehicle graphics, helping brands achieve strong visibility in highly competitive environments.
+                Whether you’re a local shop owner looking for a beautiful sign or a growing brand ready for a city-wide fleet, we’ve got you covered. We handle everything from the first sketch to the final install.
               </motion.p>
               <motion.p variants={fadeInUp}>
-                With a commitment to international standards and local market compliance, we provide complete turnkey solutions — from design and production to installation and maintenance.
+                We know the UAE market and all the local rules, so you don't have to worry about the paperwork. We just focus on making your brand look its absolute best.
               </motion.p>
             </motion.div>
             <motion.div 
@@ -723,8 +723,8 @@ export default function AboutPage() {
               variants={fadeInUp}
             >
               <Target className="icon" size={32} />
-              <h3>Our Vision</h3>
-              <p>To be recognized as a reliable and innovative branding and signage partner in the UAE, delivering world-class visual solutions that enhance brand presence and support business growth.</p>
+              <h3>Our Goal</h3>
+              <p>We want to be the team you trust to make your business look great. We’re focused on simple, honest service and results that help your brand grow.</p>
             </motion.div>
             <motion.div 
               className="vm-card"
@@ -734,8 +734,8 @@ export default function AboutPage() {
               variants={fadeInUp}
             >
               <ShieldCheck className="icon" size={32} />
-              <h3>Our Mission</h3>
-              <p>To deliver creative, compliant, and high-quality advertising solutions that meet UAE authority requirements while exceeding client expectations in terms of durability, safety, and visual impact.</p>
+              <h3>Our Promise</h3>
+              <p>We promise to deliver high-quality work that lasts. We handle all the local permits and rules, so you can sit back and relax knowing everything is taken care of.</p>
             </motion.div>
           </div>
         </section>
@@ -788,9 +788,9 @@ export default function AboutPage() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2>Our <span className="italic">Process</span></h2>
-            <p>A simple and efficient approach to launch your advertising campaign.</p>
-            <div className="steps-label">Steps</div>
+            <h2>How we <span className="italic">work</span></h2>
+            <p>A simple and stress-free way to get your brand noticed.</p>
+            <div className="steps-label">Easy Steps</div>
           </motion.div>
 
           <div className="process-wrapper">

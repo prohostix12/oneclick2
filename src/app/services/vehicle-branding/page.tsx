@@ -354,10 +354,14 @@ export default function VehicleBrandingPage() {
         }
 
         .contact-section {
-          background: #1c1c1c;
-          padding: 4rem 2rem;
+          background: linear-gradient(rgba(12, 12, 12, 0.92), rgba(20, 0, 0, 0.88)), url('/signage-production.png');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          padding: 6rem 2rem;
           text-align: center;
           color: white;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .contact-container {
@@ -429,8 +433,8 @@ export default function VehicleBrandingPage() {
 
         .submit-button {
           padding: 1rem 2rem;
-          background: #1c1c1c;
-          color: #1c1c1c;
+          background: #e61e25;
+          color: white;
           border: none;
           border-radius: 50px;
           font-weight: 700;
@@ -441,8 +445,9 @@ export default function VehicleBrandingPage() {
         }
 
         .submit-button:hover {
+          background: #ff2d35;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+          box-shadow: 0 8px 20px rgba(230, 30, 37, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -585,7 +590,7 @@ export default function VehicleBrandingPage() {
             </motion.div>
 
             <motion.div variants={fadeInUp} style={{ marginTop: '2rem', textAlign: 'center' }}>
-              <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', padding: '1.2rem 3rem', background: 'white', color: '#1c1c1c', fontWeight: 700, borderRadius: '12px', textDecoration: 'none', transition: 'all 0.3s ease', fontSize: '1.1rem', boxShadow: '0 4px 12px rgba(12, 12, 12,0.1)' }}>
+              <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', padding: '1.2rem 3rem', background: '#e61e25', color: 'white', fontWeight: 700, borderRadius: '12px', textDecoration: 'none', transition: 'all 0.3s ease', fontSize: '1.1rem', boxShadow: '0 4px 20px rgba(230, 30, 37, 0.4)' }}>
                 Submit Request <ArrowRight size={22} />
               </Link>
             </motion.div>

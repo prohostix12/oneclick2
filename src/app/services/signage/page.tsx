@@ -243,28 +243,34 @@ export default function SignagePage() {
         
 
         .cta-section {
-          background: #1c1c1c;
-          padding: 4rem 2rem;
+          background: linear-gradient(rgba(12, 12, 12, 0.92), rgba(20, 0, 0, 0.88)), url('/signage-production.png');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          padding: 6rem 2rem;
           text-align: center;
           color: white;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .cta-title {
-          font-size: 2rem;
+          font-size: 2.2rem;
           font-weight: 900;
           margin-bottom: 0.3rem;
+          color: white;
         }
 
         .cta-subtitle {
           font-style: italic;
-          color: rgba(255,255,255,0.8);
-          font-size: 1.6rem;
+          color: #e61e25;
+          font-size: 2rem;
           font-weight: 700;
           margin-bottom: 1.5rem;
+          text-shadow: 0 0 20px rgba(230, 30, 37, 0.4);
         }
 
         .cta-description {
-          color: rgba(255,255,255,0.7);
+          color: rgba(255,255,255,0.75);
           margin-bottom: 1.5rem;
           font-size: 0.95rem;
         }
@@ -303,8 +309,8 @@ export default function SignagePage() {
 
         .submit-button {
           padding: 1rem 2rem;
-          background: #1c1c1c;
-          color: #1c1c1c;
+          background: #e61e25;
+          color: white;
           border: none;
           border-radius: 8px;
           font-weight: 700;
@@ -314,8 +320,9 @@ export default function SignagePage() {
         }
 
         .submit-button:hover {
+          background: #ff2d35;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+          box-shadow: 0 8px 20px rgba(230, 30, 37, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -445,7 +452,7 @@ Touch
           </motion.p>
 
           <motion.div variants={fadeInUp} style={{ marginTop: '2rem' }}>
-            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', padding: '1.2rem 3rem', background: 'white', color: '#1c1c1c', fontWeight: 700, borderRadius: '12px', textDecoration: 'none', transition: 'all 0.3s ease', fontSize: '1.1rem', boxShadow: '0 4px 12px rgba(12, 12, 12,0.1)' }}>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem', padding: '1.2rem 3rem', background: '#e61e25', color: 'white', fontWeight: 700, borderRadius: '12px', textDecoration: 'none', transition: 'all 0.3s ease', fontSize: '1.1rem', boxShadow: '0 4px 20px rgba(230, 30, 37, 0.4)' }}>
               Submit Request <ArrowRight size={22} />
             </Link>
           </motion.div>

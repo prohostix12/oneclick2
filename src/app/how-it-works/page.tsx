@@ -6,33 +6,33 @@ import { Search, Palette, ClipboardCheck, Factory, Truck, CheckCircle2 } from 'l
 const steps = [
   {
     icon: <Search size={32} />,
-    title: 'Consultation & Strategy',
-    description: 'We start by understanding your brand vision and business goals to develop a targeted advertising strategy that maximizes impact.'
+    title: 'Say Hi',
+    description: 'Drop us a message or give us a call. Tell us what you\'re thinking, and we\'ll help you figure out the best approach for your business.'
   },
   {
     icon: <Palette size={32} />,
-    title: 'Design & Visualisation',
-    description: 'Our creative team brings your ideas to life with high-impact designs, providing detailed 3D visualisations of your signage or campaign.'
+    title: 'The Design',
+    description: 'We work together on a design that looks great and gets your message across clearly. We’ll even show you a 3D preview so you know exactly how it’ll look.'
   },
   {
     icon: <ClipboardCheck size={32} />,
-    title: 'Authority Approvals',
-    description: 'We handle all necessary permits and approvals from RTA, Dubai Municipality, and other relevant authorities across the UAE.'
+    title: 'The Paperwork',
+    description: 'Don\'t worry about the boring stuff. We handle all the permits and approvals from the RTA and local authorities for you.'
   },
   {
     icon: <Factory size={32} />,
-    title: 'Precision Fabrication',
-    description: 'Using high-grade materials and state-of-the-art technology, we manufacture your signage with absolute precision and quality control.'
+    title: 'We Build It',
+    description: 'Our team gets to work printing and building your ads using the best materials. We don\'t cut corners, so your signs stay looking fresh.'
   },
   {
     icon: <Truck size={32} />,
-    title: 'Installation & Logistics',
-    description: 'Our professional team ensures safe transportation and precise installation of your advertising media at the chosen locations.'
+    title: 'Installation',
+    description: 'We install everything for you. Our professional team makes sure it\'s secure, safe, and perfectly placed to get noticed.'
   },
   {
     icon: <CheckCircle2 size={32} />,
-    title: 'Maintenance & Support',
-    description: 'We provide ongoing maintenance and technical support to ensure your campaign continues to look stunning and perform reliably.'
+    title: 'Ongoing Support',
+    description: 'We don\'t just leave you there. We\'re always here for maintenance or if you want to launch your next big idea.'
   }
 ];
 
@@ -48,7 +48,7 @@ export default function HowItWorks() {
             animate={{ opacity: 1, y: 0 }}
             style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)', fontWeight: 900, letterSpacing: '-2px', marginBottom: '20px' }}
           >
-            How It <span style={{ color: '#e61e25' }}>Works</span>
+            How it <span style={{ color: '#e61e25' }}>works</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export default function HowItWorks() {
             transition={{ delay: 0.3 }}
             style={{ fontSize: '1.2rem', color: '#888', maxWidth: '700px', margin: '0 auto', lineHeight: 1.6 }}
           >
-            A seamless, end-to-end process from initial concept to high-impact physical execution across the UAE.
+            A simple, stress-free process from your first idea to seeing your brand live across the UAE.
           </motion.p>
         </div>
 

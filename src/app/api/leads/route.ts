@@ -1,5 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient, Db } from 'mongodb';
+import fs from 'fs';
+import path from 'path';
+
+const LEADS_FILE = path.join(process.cwd(), 'data', 'leads.json');
+
+function readLocalLeads(): any[] {
+  try {
+    if (!fs.existsSync(LEADS_FILE)) return [];
+    return JSON.parse(fs.readFileSync(LEADS_FILE, 'utf-8'));
+  } catch { return []; }
+}
+
+function writeLocalLeads(leads: any[]) {
+  const dir = path.dirname(LEADS_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+}
 
 interface LeadData {
   fullName: string;
@@ -68,98 +85,70 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Connect to database
-    const database = await connectToDatabase();
-    const leadsCollection = database.collection('leads');
-
-    // Check for duplicate email (optional - you might want to allow duplicates)
-    const existingLead = await leadsCollection.findOne({ email: email.toLowerCase() });
-    
-    // Prepare lead data
-    const leadData: LeadData & { 
-      createdAt: Date; 
-      updatedAt: Date; 
-      status: string;
-      emailLower: string;
-    } = {
+    const leadData = {
       ...body,
       emailLower: email.toLowerCase(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       status: 'new',
-      submittedAt: body.submittedAt || new Date().toISOString()
+      submittedAt: body.submittedAt || new Date().toISOString(),
     };
 
-    let result;
-    
-    if (existingLead) {
-      // Update existing lead with new information
-      result = await leadsCollection.updateOne(
-        { email: email.toLowerCase() },
-        { 
-          $set: {
-            ...leadData,
-            updatedAt: new Date(),
-            status: 'updated'
-          }
-        }
-      );
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Lead information updated successfully',
-        leadId: existingLead._id,
-        isUpdate: true
-      });
-    } else {
-      // Insert new lead
-      result = await leadsCollection.insertOne(leadData);
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Lead captured successfully',
-        leadId: result.insertedId,
-        isUpdate: false
-      });
+    // Try MongoDB first, fall back to local JSON file
+    try {
+      const database = await connectToDatabase();
+      const leadsCollection = database.collection('leads');
+      const existingLead = await leadsCollection.findOne({ email: email.toLowerCase() });
+
+      if (existingLead) {
+        await leadsCollection.updateOne(
+          { email: email.toLowerCase() },
+          { $set: { ...leadData, updatedAt: new Date().toISOString(), status: 'updated' } }
+        );
+        return NextResponse.json({ success: true, message: 'Lead updated', leadId: existingLead._id, isUpdate: true });
+      } else {
+        const result = await leadsCollection.insertOne(leadData);
+        return NextResponse.json({ success: true, message: 'Lead captured', leadId: result.insertedId, isUpdate: false });
+      }
+    } catch (dbError) {
+      console.warn('MongoDB unavailable, saving to local file:', (dbError as Error).message);
+
+      // Local JSON fallback
+      const leads = readLocalLeads();
+      const existing = leads.findIndex((l: any) => l.emailLower === email.toLowerCase());
+      const newLead = { ...leadData, _id: Date.now().toString() };
+
+      if (existing >= 0) {
+        leads[existing] = { ...leads[existing], ...newLead, status: 'updated' };
+      } else {
+        leads.push(newLead);
+      }
+      writeLocalLeads(leads);
+      return NextResponse.json({ success: true, message: 'Lead captured', leadId: newLead._id, isUpdate: existing >= 0 });
     }
 
   } catch (error) {
     console.error('Error processing lead:', error);
-    
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: 'Database error: ' + error.message },
-        { status: 500 }
-      );
-    }
-    
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const status = searchParams.get('status');
-    const service = searchParams.get('service');
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '10');
+  const status = searchParams.get('status');
+  const service = searchParams.get('service');
 
+  try {
     const database = await connectToDatabase();
     const leadsCollection = database.collection('leads');
 
-    // Build filter
     const filter: any = {};
     if (status) filter.status = status;
     if (service) filter.interestedService = service;
 
-    // Get total count
     const total = await leadsCollection.countDocuments(filter);
-
-    // Get leads with pagination
     const leads = await leadsCollection
       .find(filter)
       .sort({ createdAt: -1 })
@@ -167,23 +156,21 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .toArray();
 
-    return NextResponse.json({
-      success: true,
-      data: leads,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit)
-      }
-    });
+    return NextResponse.json({ success: true, data: leads, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 
-  } catch (error) {
-    console.error('Error fetching leads:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch leads' },
-      { status: 500 }
-    );
+  } catch (dbError) {
+    console.warn('MongoDB unavailable, reading from local file');
+
+    // Local JSON fallback
+    let leads = readLocalLeads();
+    if (status) leads = leads.filter((l: any) => l.status === status);
+    if (service) leads = leads.filter((l: any) => l.interestedService === service);
+    leads.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    const total = leads.length;
+    const paginated = leads.slice((page - 1) * limit, page * limit);
+
+    return NextResponse.json({ success: true, data: paginated, pagination: { page, limit, total, pages: Math.ceil(total / limit) }, source: 'local' });
   }
 }
 
