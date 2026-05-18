@@ -2,12 +2,11 @@
 
 import React, { useState, FormEvent, useEffect } from 'react';
 import { motion, AnimatePresence, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone } from 'lucide-react';
+import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone, Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
-import AnimatedHeroHeading from '@/components/AnimatedHeroHeading';
-import MysteryBoxSection from '@/components/MysteryBoxSection';
 import PremiumScratchCard from '@/components/PremiumScratchCard';
 import EnquireNowModal from '@/components/EnquireNowModal';
+import AnimatedServicesCircle from '@/components/AnimatedServicesCircle';
 
 import './black-cards.css';
 import './home.css';
@@ -101,13 +100,19 @@ const staggerContainer: Variants = {
  * - useModalVersion: true to use old modal, false for new inline
  */
 
+const WhatsAppIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.729-1.452L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.968C16.574 1.97 14.101.94 11.479.94c-5.44 0-9.866 4.369-9.87 9.8-.001 1.768.468 3.49 1.354 5.03l-.997 3.641 3.791-.983 1.3.766zm10.741-6.953c-.276-.139-1.637-.805-1.89-.897-.252-.093-.436-.139-.62.139-.184.277-.712.897-.872 1.082-.16.186-.32.208-.596.069-.276-.139-1.168-.429-2.223-1.372-.821-.73-1.376-1.631-1.537-1.909-.16-.277-.017-.427.121-.565.125-.124.276-.322.414-.484.14-.162.186-.277.278-.462.093-.185.047-.347-.023-.485-.07-.139-.62-1.493-.849-2.046-.223-.538-.448-.465-.62-.473-.16-.008-.344-.01-.528-.01-.184 0-.485.07-.74.347-.253.277-.965.943-.965 2.3s.988 2.668 1.126 2.853c.138.185 1.944 2.954 4.71 4.14 1.716.737 2.378.825 2.825.803.493-.024 1.638-.665 1.87-.13.232.536.232.996.115 1.204-.117.208-.574.348-.85.348z"/>
+  </svg>
+);
+
 const heroServices = [
-  { name: 'Branding', img: '/signage-branding.png', link: '/services/branding' },
-  { name: 'Digital Printing', img: '/signage-digital-print.png', link: '/services/digital-graphics' },
-  { name: 'Vehicle Branding', img: '/signage-vehicle.png', link: '/services/vehicle-branding' },
-  { name: 'Signage', img: '/signage-production.png', link: '/services/signage' },
-  { name: 'Exhibition Stands', img: '/signage-exhibition.png', link: '/services/exhibition' },
-  { name: 'Facade Cladding', img: '/signage-cladding.png', link: '/services/cladding' },
+  { name: 'Branding & Corporate Identity', img: '/signage-branding.png', link: '/services/branding' },
+  { name: 'Digital Printed Graphics', img: '/signage-digital-print.png', link: '/services/digital-graphics' },
+  { name: 'Vehicle Graphics & Fleet Branding', img: '/signage-vehicle.png', link: '/services/vehicle-branding' },
+  { name: 'Exhibition, Display & POS Solutions', img: '/signage-production.png', link: '/services/signage' },
+  { name: 'Signage Production & Installation', img: '/signage-exhibition.png', link: '/services/exhibition' },
+  { name: 'Cladding & Facade Solutions', img: '/signage-cladding.png', link: '/services/cladding' },
 ];
 
 // Two groups of 4 for the paginated carousel
@@ -128,8 +133,26 @@ export default function Home() {
   const [openBrandAccordion, setOpenBrandAccordion] = useState<number | null>(0);
   const [isScratchCardOpen, setIsScratchCardOpen] = useState(false);
   const [enquireItem, setEnquireItem] = useState<string | null>(null);
-  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [carouselPage, setCarouselPage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 3000); // 3 seconds matches the video/intro and services load
+    return () => clearTimeout(timer);
+  }, []);
   
 
 
@@ -142,9 +165,8 @@ export default function Home() {
   
   const rotateX = useTransform(springY, [0, 1], [10, -10]);
   const rotateY = useTransform(springX, [0, 1], [-10, 10]);
-  // bgX / bgY kept for when the building-image background is restored
-  // const bgX = useTransform(springX, [0, 1], [-20, 20]);
-  // const bgY = useTransform(springY, [0, 1], [-20, 20]);
+  const bgX = useTransform(springX, [0, 1], [-20, 20]);
+  const bgY = useTransform(springY, [0, 1], [-20, 20]);
 
   const handleHeroMouseMove = (e: React.MouseEvent) => {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -175,12 +197,7 @@ export default function Home() {
     setCurrentYear(new Date().getFullYear());
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroSlideIndex((prev) => (prev + 1) % heroServices.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -246,95 +263,127 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section" onMouseMove={handleHeroMouseMove}>
 
-        {/* ── ORIGINAL building image — uncomment to restore ──────────────────
         <motion.div
           className="hero-background"
           style={{ x: bgX, y: bgY }}
         >
+          {/* Static image behind the video */}
           <img
-            src="/dubai-hero-building.jpg"
-            alt="One Click Advertisement - Dubai Professional Buildings"
+            src="/hero-background.png.png"
+            alt="Hero Background"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
+          />
+
+          {/* Video that plays once and fades out */}
+          <video
+            src="/my-bg-video.mp4.mp4"
+            autoPlay
+            muted
+            playsInline
+            onEnded={() => setVideoEnded(true)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: videoEnded ? 0 : 1,
+              transition: 'opacity 1.2s ease-in-out',
+              pointerEvents: 'none'
+            }}
           />
         </motion.div>
-        ─────────────────────────────────────────────────────────────────────── */}
-
-        {/* Service image slideshow background */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
-          {heroServices.map((service, index) => (
-            <motion.div
-              key={service.link}
-              animate={{
-                opacity: heroSlideIndex === index ? 1 : 0,
-                scale:   heroSlideIndex === index ? 1 : 1.06,
-              }}
-              initial={{ opacity: 0, scale: 1.06 }}
-              transition={{ duration: 1.4, ease: 'easeInOut' }}
-              style={{ position: 'absolute', inset: 0 }}
-            >
-              <img
-                src={service.img}
-                alt={service.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.72) saturate(1.15)' }}
-              />
-            </motion.div>
-          ))}
-        </div>
 
         <div className="hero-overlay"></div>
 
-        {/* Slide indicators — must be above overlay (z-index > 1) and above hero-content (z-index > 2), below claim-btn */}
-        <div style={{ position: 'absolute', bottom: '11rem', left: '2rem', zIndex: 4, display: 'flex', flexDirection: 'column', gap: '0.55rem', pointerEvents: 'auto' }}>
-          {heroServices.map((service, index) => (
-            <div
-              key={index}
-              onClick={() => setHeroSlideIndex(index)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                cursor: 'pointer',
-                opacity: heroSlideIndex === index ? 1 : 0.45,
-                transition: 'opacity 0.4s ease',
-              }}
-            >
-              <div style={{
-                width: heroSlideIndex === index ? '28px' : '6px',
-                height: '6px',
-                borderRadius: '3px',
-                background: heroSlideIndex === index ? '#e61e25' : 'rgba(255,255,255,0.8)',
-                transition: 'all 0.4s ease',
-                boxShadow: heroSlideIndex === index ? '0 0 10px rgba(230,30,37,0.8)' : 'none',
-                flexShrink: 0,
-              }} />
-              {heroSlideIndex === index && (
-                <span style={{ color: 'white', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', textShadow: '0 1px 6px rgba(0,0,0,0.9)', whiteSpace: 'nowrap' }}>
-                  {service.name}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
         <motion.div 
           className="hero-content"
-          style={{ rotateX, rotateY }}
+          style={{ rotateX, rotateY, width: '100%', maxWidth: '1200px' }}
           initial={{ opacity: 0, rotateX: 20, y: 100, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
           transition={{ duration: 1.0, type: "spring", bounce: 0.3 }}
         >
-          <AnimatedHeroHeading 
-            onReveal={() => {}}
-            onTagClick={() => {}}
-          />
-          <motion.div className="hero-buttons" variants={fadeInUp} style={{ marginBottom: '2rem' }}>
-            <Link href="/contact#campaign" className="btn btn-primary">
-              Let's build your campaign <ArrowRight size={20} />
-            </Link>
-            <Link href="/about" className="btn btn-secondary">
-              Learn More <ArrowRight size={20} />
-            </Link>
-          </motion.div>
+          <div className="hero-grid-container">
+            {/* The Text and Buttons side */}
+            <motion.div
+              className="hero-text-side"
+              initial={{ opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
+              animate={showContent ? { opacity: 1, x: 0, y: isMobile ? -105 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
+              transition={{ duration: 1.8, ease: "easeInOut" }}
+            >
+              <h1 className="hero-title-main" style={{
+                fontSize: 'clamp(3rem, 7.5vw, 6.2rem)',
+                fontWeight: 900,
+                color: '#fff',
+                textShadow: '0 8px 30px rgba(0,0,0,0.6)',
+                letterSpacing: '-2px',
+                margin: 0,
+                lineHeight: 1,
+                textTransform: 'uppercase',
+                whiteSpace: 'nowrap'
+              }}>
+                <span style={{ color: '#e61e25' }}>AT</span>TRACTIVE
+              </h1>
+              
+              <div className="hero-btn-group" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
+                <Link href="/contact" className="btn btn-primary" style={{ padding: '1rem 1.5rem', fontSize: '0.9rem' }}>
+                  LET'S BUILD YOUR CAMPAIGN <ArrowRight size={18} />
+                </Link>
+                <Link href="/services" className="btn btn-secondary" style={{ padding: '1rem 1.5rem', fontSize: '0.9rem', background: 'transparent' }}>
+                  LEARN MORE <ArrowRight size={18} />
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* The Globe side */}
+            <motion.div
+              className="hero-globe-side"
+              initial={{ x: isMobile ? 0 : '-22vw', y: isMobile ? 30 : 0, scale: isMobile ? 1.05 : 1.15, opacity: 0 }}
+              animate={showContent ? {
+                x: 0,
+                y: isMobile ? -80 : 0,
+                scale: isMobile ? 0.75 : 1.0,
+                opacity: 1
+              } : {
+                x: isMobile ? 0 : '-22vw',
+                y: isMobile ? 30 : 0,
+                scale: isMobile ? 1.05 : 1.15,
+                opacity: 1
+              }}
+              transition={{ duration: 1.8, ease: "easeInOut" }}
+            >
+              <AnimatedServicesCircle services={heroServices} />
+            </motion.div>
+          </div>
         </motion.div>
+
+        {/* Floating Social Icons Bar on Right Side of Landing Page */}
+        <motion.div 
+          className="floating-social-bar"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.8, duration: 0.8 }}
+        >
+          <a href="https://www.instagram.com/oneclick_advertisement?igsh=NzNwaGo2b2VwbDNh" target="_blank" rel="noopener noreferrer" className="social-icon-btn instagram" aria-label="Instagram">
+            <Instagram size={22} />
+          </a>
+          <a href="https://www.facebook.com/oneclickadvertisement/" target="_blank" rel="noopener noreferrer" className="social-icon-btn facebook" aria-label="Facebook">
+            <Facebook size={22} />
+          </a>
+          <a href="https://wa.me/971524065110" target="_blank" rel="noopener noreferrer" className="social-icon-btn whatsapp" aria-label="WhatsApp">
+            <WhatsAppIcon size={22} />
+          </a>
+        </motion.div>
+
+
 
         <motion.div 
           className="claim-btn-floating-container"
@@ -474,47 +523,7 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Services Paginated Carousel */}
-        <div className="hero-services-strip">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={carouselPage}
-              className="hero-services-ticker"
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -100, opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-            >
-              {carouselPages[carouselPage].map((service, i) => (
-                <Link key={i} href={service.link} className="hero-service-chip">
-                  <img src={service.img} alt={service.name} className="hero-service-chip-img" />
-                  <div className="hero-service-chip-overlay" />
-                  <span className="hero-service-dot" />
-                  <div className="hero-service-chip-name">{service.name}</div>
-                </Link>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Page dots */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem', paddingBottom: '0.25rem' }}>
-            {carouselPages.map((_, i) => (
-              <div
-                key={i}
-                onClick={() => setCarouselPage(i)}
-                style={{
-                  width: carouselPage === i ? '20px' : '6px',
-                  height: '6px',
-                  borderRadius: '3px',
-                  background: carouselPage === i ? '#e61e25' : 'rgba(255,255,255,0.4)',
-                  cursor: 'pointer',
-                  transition: 'all 0.35s ease',
-                  boxShadow: carouselPage === i ? '0 0 8px rgba(230,30,37,0.7)' : 'none',
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        {/* Removed Services Paginated Carousel */}
       </section>
 
 
@@ -545,46 +554,46 @@ export default function Home() {
           </motion.p>
           
           <motion.div className="portfolio-grid" variants={staggerContainer}>
-            {[
+              {[
                { 
                 id: 1, 
                 icon: <MapPin size={32} color="#e61e25" />, 
-                title: 'Branding for everyone',
-                desc: 'We’ll help you create a look that people remember. (Think: Like that local cafe everyone knows by its logo.)',
+                title: 'Branding & Corporate Identity',
+                desc: 'We’ll help you create a look that people remember. (Like that local cafe everyone knows by its logo.)',
                 image: '/signage-branding.png'
               },
               { 
                 id: 2, 
                 icon: <Mail size={32} color="#e61e25" />, 
-                title: 'Big, bold printing',
+                title: 'Digital Printed Graphics',
                 desc: 'High-resolution prints that look sharp from across the street. Perfect for windows and banners.',
                 image: '/signage-digital-print.png'
               },
               { 
                 id: 3, 
                 icon: <Phone size={32} color="#e61e25" />, 
-                title: 'Ads on the move',
+                title: 'Vehicle Graphics & Fleet Branding',
                 desc: 'Turn your car or van into a mobile billboard. One of the best ways to get seen all over town.',
                 image: '/signage-vehicle.png'
               },
               { 
                 id: 4, 
                 icon: <ArrowRight size={32} color="#e61e25" />, 
-                title: 'Signs that last',
+                title: 'Exhibition, Display & POS Solutions',
                 desc: 'Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.',
                 image: '/signage-production.png'
               },
               { 
                 id: 5, 
                 icon: <MapPin size={32} color="#e61e25" />, 
-                title: 'Pop-up displays',
+                title: 'Signage Production & Installation',
                 desc: 'Exhibition booths and kiosks that make people want to walk over and say hi.',
                 image: '/signage-exhibition.png'
               },
               { 
                 id: 6, 
                 icon: <ArrowRight size={32} color="#e61e25" />, 
-                title: 'Facade makeovers',
+                title: 'Cladding & Facade Solutions',
                 desc: 'Give your building a fresh, modern look. Turning old storefronts into local landmarks.',
                 image: '/signage-cladding.png'
               }
@@ -600,11 +609,11 @@ export default function Home() {
                   backgroundPosition: 'center'
                 }}
               >
-                <h3 className="portfolio-title">
+                <h3 className={`portfolio-title ${item.title.length > 25 ? 'long-title' : ''}`}>
                   {item.title.includes('&') ? (
                     <>
                       <span style={{ color: 'white' }}>{item.title.split('&')[0].trim()}</span>
-                      <span style={{ color: 'white' }}> & </span>
+                      <span style={{ color: '#e61e25' }}> & </span>
                       <span style={{ color: 'white' }}>{item.title.split('&')[1]?.trim()}</span>
                     </>
                   ) : item.title}
@@ -631,6 +640,7 @@ export default function Home() {
                     marginBottom: '3.5rem',
                     position: 'relative',
                     zIndex: 20,
+                    whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#e61e25'; (e.currentTarget as HTMLButtonElement).style.color = 'white'; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#e61e25'; }}
