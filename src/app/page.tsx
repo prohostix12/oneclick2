@@ -121,6 +121,9 @@ const carouselPages = [
   [...heroServices.slice(4), ...heroServices.slice(0, 2)],
 ];
 
+// Track if the video has played during the current application session (persists across client-side navigation, resets on refresh)
+let globalVideoPlayed = false;
+
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
@@ -137,12 +140,20 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [skipIntro, setSkipIntro] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (globalVideoPlayed) {
+      setSkipIntro(true);
       setShowContent(true);
-    }, 3000);
-    return () => clearTimeout(timer);
+      setVideoEnded(true);
+    } else {
+      globalVideoPlayed = true;
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
@@ -282,24 +293,26 @@ export default function Home() {
           />
 
           {/* Video that plays once and fades out */}
-          <video
-            src="/my-bg-video.mp4"
-            autoPlay
-            muted
-            playsInline
-            onEnded={() => setVideoEnded(true)}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              opacity: videoEnded ? 0 : 1,
-              transition: 'opacity 1.2s ease-in-out',
-              pointerEvents: 'none'
-            }}
-          />
+          {!skipIntro && (
+            <video
+              src="/my-bg-video.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setVideoEnded(true)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: videoEnded ? 0 : 1,
+                transition: 'opacity 1.2s ease-in-out',
+                pointerEvents: 'none'
+              }}
+            />
+          )}
         </motion.div>
 
         <div className="hero-overlay"></div>
@@ -360,7 +373,7 @@ export default function Home() {
               }}
               transition={{ duration: 1.8, ease: "easeInOut" }}
             >
-              <AnimatedServicesCircle services={heroServices} />
+              <AnimatedServicesCircle services={heroServices} skipDelay={skipIntro} />
             </motion.div>
           </div>
         </motion.div>

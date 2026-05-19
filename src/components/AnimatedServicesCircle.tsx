@@ -12,19 +12,24 @@ interface Service {
 
 interface AnimatedServicesCircleProps {
   services: Service[];
+  skipDelay?: boolean;
 }
 
-export default function AnimatedServicesCircle({ services }: AnimatedServicesCircleProps) {
+export default function AnimatedServicesCircle({ services, skipDelay = false }: AnimatedServicesCircleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isZigzagging, setIsZigzagging] = useState(false);
   const [showServices, setShowServices] = useState(false);
 
   useEffect(() => {
+    if (skipDelay) {
+      setShowServices(true);
+      return;
+    }
     const timer = setTimeout(() => {
       setShowServices(true);
     }, 3000); // 3 seconds matches the page transition delay
     return () => clearTimeout(timer);
-  }, []);
+  }, [skipDelay]);
 
   useEffect(() => {
     if (!services || services.length === 0 || !showServices) return;
