@@ -12,34 +12,22 @@ interface Service {
 
 interface AnimatedServicesCircleProps {
   services: Service[];
-  skipDelay?: boolean;
+  active: boolean;
 }
 
-export default function AnimatedServicesCircle({ services, skipDelay = false }: AnimatedServicesCircleProps) {
+export default function AnimatedServicesCircle({ services, active }: AnimatedServicesCircleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isZigzagging, setIsZigzagging] = useState(false);
-  const [showServices, setShowServices] = useState(false);
 
   useEffect(() => {
-    if (skipDelay) {
-      setShowServices(true);
-      return;
-    }
-    const timer = setTimeout(() => {
-      setShowServices(true);
-    }, 3000); // 3 seconds matches the page transition delay
-    return () => clearTimeout(timer);
-  }, [skipDelay]);
-
-  useEffect(() => {
-    if (!services || services.length === 0 || !showServices) return;
+    if (!services || services.length === 0 || !active) return;
     
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % services.length);
     }, 3000); // cycle every 3 seconds
 
     return () => clearInterval(interval);
-  }, [services, showServices]);
+  }, [services, active]);
 
   if (!services || services.length === 0) return null;
 
@@ -90,7 +78,7 @@ export default function AnimatedServicesCircle({ services, skipDelay = false }: 
  
         {/* Centered Image and Text */}
         <AnimatePresence mode="wait">
-          {!showServices ? (
+          {!active ? (
             <motion.div
               key="brand-logo"
               initial={{ opacity: 0, scale: 0.8 }}

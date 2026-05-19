@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent, useEffect } from 'react';
+import React, { useState, FormEvent, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone, Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
@@ -141,6 +141,7 @@ export default function Home() {
   const [videoEnded, setVideoEnded] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [skipIntro, setSkipIntro] = useState(false);
+  const fallbackTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (globalVideoPlayed) {
@@ -149,12 +150,23 @@ export default function Home() {
       setVideoEnded(true);
     } else {
       globalVideoPlayed = true;
-      const timer = setTimeout(() => {
+      fallbackTimerRef.current = setTimeout(() => {
+        setVideoEnded(true);
         setShowContent(true);
-      }, 3000);
-      return () => clearTimeout(timer);
+      }, 10000); // 10-second safety fallback
     }
+    return () => {
+      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current);
+    };
   }, []);
+
+  const handleVideoEnd = () => {
+    setVideoEnded(true);
+    setShowContent(true);
+    if (fallbackTimerRef.current) {
+      clearTimeout(fallbackTimerRef.current);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -299,7 +311,7 @@ export default function Home() {
               autoPlay
               muted
               playsInline
-              onEnded={() => setVideoEnded(true)}
+              onEnded={handleVideoEnd}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -373,7 +385,7 @@ export default function Home() {
               }}
               transition={{ duration: 1.8, ease: "easeInOut" }}
             >
-              <AnimatedServicesCircle services={heroServices} skipDelay={skipIntro} />
+              <AnimatedServicesCircle services={heroServices} active={showContent} />
             </motion.div>
           </div>
         </motion.div>
