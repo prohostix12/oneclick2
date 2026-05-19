@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent, useEffect, useRef } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { motion, AnimatePresence, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone, Facebook, Instagram } from 'lucide-react';
 import Link from 'next/link';
@@ -121,8 +121,7 @@ const carouselPages = [
   [...heroServices.slice(4), ...heroServices.slice(0, 2)],
 ];
 
-// Track if the video has played during the current application session (persists across client-side navigation, resets on refresh)
-let globalVideoPlayed = false;
+let videoHasPlayed = false;
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -138,35 +137,17 @@ export default function Home() {
   const [enquireItem, setEnquireItem] = useState<string | null>(null);
   const [carouselPage, setCarouselPage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [videoEnded, setVideoEnded] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [skipIntro, setSkipIntro] = useState(false);
-  const fallbackTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [videoEnded, setVideoEnded] = useState(videoHasPlayed);
+  const [showContent, setShowContent] = useState(videoHasPlayed);
 
   useEffect(() => {
-    if (globalVideoPlayed) {
-      setSkipIntro(true);
+    if (videoHasPlayed) return;
+    const timer = setTimeout(() => {
       setShowContent(true);
-      setVideoEnded(true);
-    } else {
-      globalVideoPlayed = true;
-      fallbackTimerRef.current = setTimeout(() => {
-        setVideoEnded(true);
-        setShowContent(true);
-      }, 10000); // 10-second safety fallback
-    }
-    return () => {
-      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current);
-    };
+    }, 3000);
+    videoHasPlayed = true;
+    return () => clearTimeout(timer);
   }, []);
-
-  const handleVideoEnd = () => {
-    setVideoEnded(true);
-    setShowContent(true);
-    if (fallbackTimerRef.current) {
-      clearTimeout(fallbackTimerRef.current);
-    }
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -305,26 +286,24 @@ export default function Home() {
           />
 
           {/* Video that plays once and fades out */}
-          {!skipIntro && (
-            <video
-              src="/my-bg-video.mp4"
-              autoPlay
-              muted
-              playsInline
-              onEnded={handleVideoEnd}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                opacity: videoEnded ? 0 : 1,
-                transition: 'opacity 1.2s ease-in-out',
-                pointerEvents: 'none'
-              }}
-            />
-          )}
+          <video
+            src="/my-bg-video.mp4"
+            autoPlay={!videoEnded}
+            muted
+            playsInline
+            onEnded={() => setVideoEnded(true)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: videoEnded ? 0 : 1,
+              transition: 'opacity 1.2s ease-in-out',
+              pointerEvents: 'none'
+            }}
+          />
         </motion.div>
 
         <div className="hero-overlay"></div>
@@ -385,7 +364,7 @@ export default function Home() {
               }}
               transition={{ duration: 1.8, ease: "easeInOut" }}
             >
-              <AnimatedServicesCircle services={heroServices} active={showContent} />
+              <AnimatedServicesCircle services={heroServices} skipDelay={videoEnded} />
             </motion.div>
           </div>
         </motion.div>
@@ -662,8 +641,7 @@ export default function Home() {
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     fontFamily: 'inherit',
-                    marginTop: 'auto',
-                    marginBottom: '0',
+                    marginBottom: '3.5rem',
                     position: 'relative',
                     zIndex: 20,
                     whiteSpace: 'nowrap',
