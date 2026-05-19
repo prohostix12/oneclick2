@@ -275,19 +275,21 @@ export default function Home() {
           className="hero-background"
           style={{ x: bgX, y: bgY }}
         >
-          {/* Static image behind the video */}
-          <img
-            src="/hero-background.png.png"
-            alt="Hero Background"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
-          />
+          {/* Static image behind the video, rendered only after video ends */}
+          {videoEnded && (
+            <img
+              src="/hero-background.png.png"
+              alt="Hero Background"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+          )}
 
           {/* Overlay only for the static image, placed behind the video */}
           <div className="hero-overlay"></div>
