@@ -331,7 +331,7 @@ export default function Home() {
             <motion.div
               className="hero-text-side"
               initial={{ opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
-              animate={showContent ? { opacity: 1, x: 0, y: isMobile ? -105 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
+              animate={showContent ? { opacity: 1, x: 0, y: isMobile ? -50 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
               transition={{ duration: 1.8, ease: "easeInOut" }}
             >
               <h1 className="hero-title-main" style={{
@@ -364,7 +364,7 @@ export default function Home() {
               initial={{ x: isMobile ? 0 : '-22vw', y: isMobile ? 30 : 0, scale: isMobile ? 1.05 : 1.15, opacity: 0 }}
               animate={showContent ? {
                 x: 0,
-                y: isMobile ? -80 : 0,
+                y: isMobile ? -120 : 0,
                 scale: isMobile ? 0.75 : 1.0,
                 opacity: 1
               } : {
