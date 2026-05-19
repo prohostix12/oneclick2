@@ -289,6 +289,9 @@ export default function Home() {
             }}
           />
 
+          {/* Overlay only for the static image, placed behind the video */}
+          <div className="hero-overlay"></div>
+
           {/* Video that plays once and fades out */}
           {shouldRenderVideo && (
             <video
@@ -311,13 +314,12 @@ export default function Home() {
                 objectFit: 'cover',
                 opacity: videoEnded ? 0 : 1,
                 transition: 'opacity 1.2s ease-in-out',
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                zIndex: 2
               }}
             />
           )}
         </motion.div>
-
-        <div className="hero-overlay"></div>
 
         <motion.div 
           className="hero-content"
