@@ -121,8 +121,6 @@ const carouselPages = [
   [...heroServices.slice(4), ...heroServices.slice(0, 2)],
 ];
 
-let videoHasPlayed = false;
-
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
@@ -137,16 +135,22 @@ export default function Home() {
   const [enquireItem, setEnquireItem] = useState<string | null>(null);
   const [carouselPage, setCarouselPage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [videoEnded, setVideoEnded] = useState(videoHasPlayed);
-  const [showContent, setShowContent] = useState(videoHasPlayed);
+  const [shouldRenderVideo, setShouldRenderVideo] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    if (videoHasPlayed) return;
-    const timer = setTimeout(() => {
+    if (typeof window !== 'undefined' && (window as any).__videoPlayed) {
+      setVideoEnded(true);
       setShowContent(true);
-    }, 3000);
-    videoHasPlayed = true;
-    return () => clearTimeout(timer);
+      setShouldRenderVideo(false);
+    } else {
+      setShouldRenderVideo(true);
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
@@ -286,24 +290,31 @@ export default function Home() {
           />
 
           {/* Video that plays once and fades out */}
-          <video
-            src="/my-bg-video.mp4"
-            autoPlay={!videoEnded}
-            muted
-            playsInline
-            onEnded={() => setVideoEnded(true)}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              opacity: videoEnded ? 0 : 1,
-              transition: 'opacity 1.2s ease-in-out',
-              pointerEvents: 'none'
-            }}
-          />
+          {shouldRenderVideo && (
+            <video
+              src="/my-bg-video.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => {
+                setVideoEnded(true);
+                if (typeof window !== 'undefined') {
+                  (window as any).__videoPlayed = true;
+                }
+              }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: videoEnded ? 0 : 1,
+                transition: 'opacity 1.2s ease-in-out',
+                pointerEvents: 'none'
+              }}
+            />
+          )}
         </motion.div>
 
         <div className="hero-overlay"></div>

@@ -21,7 +21,10 @@ export default function AnimatedServicesCircle({ services, skipDelay = false }: 
   const [showServices, setShowServices] = useState(skipDelay);
 
   useEffect(() => {
-    if (skipDelay) return;
+    if (skipDelay) {
+      setShowServices(true);
+      return;
+    }
     const timer = setTimeout(() => {
       setShowServices(true);
     }, 3000); // 3 seconds matches the page transition delay
