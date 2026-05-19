@@ -349,11 +349,18 @@ export default function Home() {
               </h1>
               
               <div className="hero-btn-group" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
-                <Link href="/contact" className="btn btn-primary" style={{ padding: '1rem 1.5rem', fontSize: '0.9rem' }}>
-                  LET'S BUILD YOUR CAMPAIGN <ArrowRight size={18} />
+                <Link href="/contact" className="btn btn-primary" style={{ 
+                  padding: isMobile ? '0.75rem 1.2rem' : '1rem 1.5rem', 
+                  fontSize: isMobile ? '0.75rem' : '0.9rem' 
+                }}>
+                  LET'S BUILD YOUR CAMPAIGN <ArrowRight size={isMobile ? 14 : 18} />
                 </Link>
-                <Link href="/services" className="btn btn-secondary" style={{ padding: '1rem 1.5rem', fontSize: '0.9rem', background: 'transparent' }}>
-                  LEARN MORE <ArrowRight size={18} />
+                <Link href="/services" className="btn btn-secondary" style={{ 
+                  padding: isMobile ? '0.75rem 1.2rem' : '1rem 1.5rem', 
+                  fontSize: isMobile ? '0.75rem' : '0.9rem', 
+                  background: 'transparent' 
+                }}>
+                  LEARN MORE <ArrowRight size={isMobile ? 14 : 18} />
                 </Link>
               </div>
             </motion.div>
