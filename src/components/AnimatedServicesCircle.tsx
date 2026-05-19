@@ -165,7 +165,7 @@ export default function AnimatedServicesCircle({ services }: AnimatedServicesCir
                 />
               </div>
 
-              <h3 className={`service-name ${services[currentIndex].name.length > 25 ? 'long-name' : ''}`} style={{ 
+              <h3 className={`service-name ${services[currentIndex].name.length > 25 ? 'long-name' : (services[currentIndex].name.length > 20 ? 'medium-name' : '')}`} style={{ 
                 margin: 0, 
                 textAlign: 'center',
                 maxWidth: '180px',

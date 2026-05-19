@@ -244,6 +244,10 @@
   font-size: clamp(0.85rem, 2.2vw, 1.05rem);
 }
 
+.service-name.medium-name {
+  font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+}
+
 @media (max-width: 768px) {
   .animated-circle-container {
     width: 260px !important;
@@ -271,5 +275,8 @@
   }
   .service-name.long-name {
     font-size: 0.7rem !important;
+  }
+  .service-name.medium-name {
+    font-size: 0.75rem !important;
   }
 }

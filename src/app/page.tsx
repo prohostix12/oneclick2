@@ -139,6 +139,13 @@ export default function Home() {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -147,13 +154,6 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 3000); // 3 seconds matches the video/intro and services load
-    return () => clearTimeout(timer);
-  }, []);
-  
 
 
   // 3D Parallax Mouse Tracking
@@ -369,8 +369,8 @@ export default function Home() {
         <motion.div 
           className="floating-social-bar"
           initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.8, duration: 0.8 }}
+          animate={showContent ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+          transition={{ delay: showContent ? 1.0 : 0, duration: 0.8 }}
         >
           <a href="https://www.instagram.com/oneclick_advertisement?igsh=NzNwaGo2b2VwbDNh" target="_blank" rel="noopener noreferrer" className="social-icon-btn instagram" aria-label="Instagram">
             <Instagram size={22} />
@@ -609,7 +609,7 @@ export default function Home() {
                   backgroundPosition: 'center'
                 }}
               >
-                <h3 className={`portfolio-title ${item.title.length > 25 ? 'long-title' : ''}`}>
+                <h3 className={`portfolio-title ${item.title.length > 25 ? 'long-title' : (item.title.length > 20 ? 'medium-title' : '')}`}>
                   {item.title.includes('&') ? (
                     <>
                       <span style={{ color: 'white' }}>{item.title.split('&')[0].trim()}</span>
