@@ -37,42 +37,42 @@ const staggerContainer: Variants = {
 
 const services = [
   {
-    title: "Branding for everyone",
+    title: "Branding & Corporate Identity",
     image: "/signage-branding.png",
     description: "We’ll help you create a look that people remember. No more generic designs—just a brand that feels like you.",
     details: ["Professional logos", "Brand identity guides", "Office & interior branding", "Consistent look across all locations"],
     link: "/services/branding"
   },
   {
-    title: "Big, bold printing",
+    title: "Digital Printed Graphics",
     image: "/signage-digital-print.png",
     description: "High-resolution prints that look sharp from across the street. Perfect for windows and massive banners.",
     details: ["Large format printing", "Wall & window graphics", "Privacy films", "Stickers & floor graphics", "Custom wallpaper"],
     link: "/services/digital-graphics"
   },
   {
-    title: "Ads on the move",
+    title: "Vehicle Graphics & Fleet Branding",
     image: "/signage-vehicle.png",
     description: "Turn your car, van, or truck into a mobile billboard. One of the best ways to get seen all over the city.",
     details: ["Full & partial wraps", "Corporate fleet branding", "Safety & reflective graphics", "Mobile advertising"],
     link: "/services/vehicle-branding"
   },
   {
-    title: "Signs that last",
+    title: "Exhibition, Display & POS Solutions",
     image: "/signage-production.png",
     description: "Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.",
     details: ["Outdoor signboards", "Indoor office signs", "3D illuminated letters", "Wayfinding signs", "Retail & mall signage"],
     link: "/services/signage"
   },
   {
-    title: "Pop-up displays",
+    title: "Signage Production & Installation",
     image: "/signage-exhibition.png",
     description: "Exhibition booths and kiosks that make people want to walk over and say hi.",
     details: ["Custom exhibition stands", "Portable kiosks", "Pop-up backdrops", "Roll-up banners", "In-store displays"],
     link: "/services/exhibition"
   },
   {
-    title: "Facade makeovers",
+    title: "Cladding & Facade Solutions",
     image: "/signage-cladding.png",
     description: "Give your building a fresh, modern look. Turning old storefronts into local landmarks.",
     details: ["ACP cladding", "Aluminum paneling", "Shopfront branding", "Modern architectural finishes", "Integrated signage"],
@@ -355,7 +355,7 @@ export default function ServicesPage() {
         }
 
         .service-title {
-          font-size: 1.8rem !important;
+          font-size: 1.8rem;
           font-weight: 800;
           margin-bottom: 2.5rem !important;
           color: white !important;
@@ -363,6 +363,10 @@ export default function ServicesPage() {
           text-align: left;
           width: 100%;
           text-shadow: 0 2px 10px rgba(12, 12, 12,0.5);
+        }
+
+        .service-title.long-title {
+          font-size: 1.45rem;
         }
 
         .service-divider {
@@ -776,7 +780,7 @@ export default function ServicesPage() {
                     backgroundPosition: 'center'
                   }}
                 >
-                  <h3 className="service-title">
+                  <h3 className={`service-title ${service.title.length > 25 ? 'long-title' : ''}`}>
                     {service.title.includes('&') ? (
                       service.title === "Signage Production & Installation" ? (
                         <>

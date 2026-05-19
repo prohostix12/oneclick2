@@ -731,12 +731,12 @@ export default function ContactPage() {
                     required
                   >
                     <option value="">What do you need help with?</option>
-                    <option value="branding">Branding for everyone</option>
-                    <option value="digital-graphics">Big, bold printing</option>
-                    <option value="vehicle-graphics">Ads on the move</option>
-                    <option value="signage">Signs that last</option>
-                    <option value="exhibition">Pop-up displays</option>
-                    <option value="cladding">Facade makeovers</option>
+                    <option value="branding">Branding & Corporate Identity</option>
+                    <option value="digital-graphics">Digital Printed Graphics</option>
+                    <option value="vehicle-graphics">Vehicle Graphics & Fleet Branding</option>
+                    <option value="signage">Exhibition, Display & POS Solutions</option>
+                    <option value="exhibition">Signage Production & Installation</option>
+                    <option value="cladding">Cladding & Facade Solutions</option>
                   </select>
                 </motion.div>
                 <motion.div variants={fadeInUp}>

@@ -268,6 +268,61 @@ body {
     max-width: 500px !important;
     margin: 1rem !important;
   }
+
+  /* Hero Grid Layout on Mobile */
+  .hero-grid-container {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .hero-text-side {
+    align-items: center !important;
+    order: 2 !important;
+    width: 100% !important;
+  }
+
+  .hero-globe-side {
+    order: 1 !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* Orbit circle scale correction on mobile */
+  .animated-circle-container {
+    scale: 0.8 !important;
+    transform-origin: center !important;
+    margin-bottom: -5.5rem !important; /* Pulls the ATTRACTIVE text up directly below the scaled globe */
+    margin-top: -1rem !important;
+  }
+
+  /* Floating Social Icons Bar on Mobile - Positioning above the Extended Offer starburst claim badge */
+  .floating-social-bar {
+    position: fixed !important;
+    right: 1.25rem !important;
+    bottom: 5.5rem !important; /* Positions vertically directly above the scaled down starburst badge */
+    top: auto !important;
+    transform: none !important;
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    z-index: 999999 !important;
+  }
+
+  .social-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .social-icon-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
 }
 
 /* ============================================
@@ -315,6 +370,13 @@ body {
 
   h3 {
     font-size: clamp(1.25rem, 4vw, 1.75rem) !important;
+  }
+
+  /* Extra small mobile positioning override */
+  .floating-social-bar {
+    bottom: 4.8rem !important;
+    right: 0.8rem !important;
+    gap: 0.5rem !important;
   }
 }
 

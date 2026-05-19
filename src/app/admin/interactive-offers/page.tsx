@@ -292,7 +292,29 @@ const OfferModal: React.FC<OfferModalProps> = ({ offer, onSave, onClose }) => {
             />
           </div>
 
-          <div />
+          <div>
+            <label className="text-xs font-black uppercase tracking-widest text-white-30 mb-2 block">Accent Color</label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {PRESET_COLORS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setForm({ ...form, color: c })}
+                  style={{
+                    width: '2rem',
+                    height: '2rem',
+                    borderRadius: '50%',
+                    background: c,
+                    border: form.color === c ? '3px solid #fff' : '3px solid transparent',
+                    cursor: 'pointer',
+                    boxShadow: form.color === c ? `0 0 0 2px ${c}` : 'none',
+                    transition: 'all 0.15s',
+                    padding: 0,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
 
           <div className="flex gap-4 pt-6">
             <button
@@ -596,7 +618,7 @@ export default function InteractiveOffersAdmin() {
                           >
                             {offer.discount}
                           </div>
-                          <div className="flex gap-1-5 opacity-0 group-hover-opacity-100 transition-opacity">
+                          <div className="flex gap-1-5 transition-opacity">
                             <button
                               onClick={() => setModalOffer(offer)}
                               className="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-black hover-bg-white-90 transition-all cursor-pointer"
