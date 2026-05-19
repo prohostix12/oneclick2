@@ -283,7 +283,7 @@ export default function Home() {
 
           {/* Video that plays once and fades out */}
           <video
-            src="/my-bg-video.mp4.mp4"
+            src="/my-bg-video.mp4"
             autoPlay
             muted
             playsInline
