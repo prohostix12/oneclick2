@@ -50,6 +50,7 @@ export default function ServicesPage() {
         items: ['', '', '', '']
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState(false);
 
     useEffect(() => {
         const auth = localStorage.getItem('adminAuth');

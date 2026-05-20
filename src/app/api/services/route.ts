@@ -5,13 +5,6 @@ import { ObjectId } from 'mongodb';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '10mb',
-        },
-    },
-};
 
 export async function GET() {
     try {
