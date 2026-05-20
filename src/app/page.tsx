@@ -140,7 +140,8 @@ export default function Home() {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && (window as any).__videoPlayed) {
+    const isAdminUser = typeof window !== 'undefined' && localStorage.getItem('adminAuth') === 'true';
+    if (isAdminUser || (typeof window !== 'undefined' && (window as any).__videoPlayed)) {
       setVideoEnded(true);
       setShowContent(true);
       setShouldRenderVideo(false);
