@@ -49,9 +49,8 @@ export default function ServicesPage() {
         image: '',
         items: ['', '', '', '']
     });
-    const [isAuthorized, setIsAuthorized] = useState(false);
-    const [filterCategory, setFilterCategory] = useState('All');
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     useEffect(() => {
         const auth = localStorage.getItem('adminAuth');
         const userStr = localStorage.getItem('adminUser');
@@ -130,6 +129,7 @@ export default function ServicesPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
         
         try {
             const response = await fetch('/api/services', {
@@ -143,18 +143,28 @@ export default function ServicesPage() {
                 setFormData({ name: '', description: '', category: '', image: '', items: ['', '', '', ''] });
                 setSuccessMessage('Service added successfully!');
                 setTimeout(() => setSuccessMessage(''), 3000);
+                // Clear cache so new service shows up
+                sessionStorage.removeItem('adminServicesCache');
+                sessionStorage.removeItem('adminServicesCacheTime');
                 fetchServices();
+            } else {
+                const err = await response.json().catch(() => ({}));
+                setSuccessMessage(err.error || 'Failed to add service. Please try again.');
+                setTimeout(() => setSuccessMessage(''), 4000);
             }
         } catch (error) {
             console.error('Error adding service:', error);
-            setSuccessMessage('Failed to add service');
-            setTimeout(() => setSuccessMessage(''), 3000);
+            setSuccessMessage('Network error. Please check your connection.');
+            setTimeout(() => setSuccessMessage(''), 4000);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleEdit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingService) return;
+        setIsSubmitting(true);
         try {
             const response = await fetch(`/api/services?id=${editingService._id}`, {
                 method: 'PUT',
@@ -167,12 +177,20 @@ export default function ServicesPage() {
                 setEditingService(null);
                 setSuccessMessage('Service updated successfully!');
                 setTimeout(() => setSuccessMessage(''), 3000);
+                sessionStorage.removeItem('adminServicesCache');
+                sessionStorage.removeItem('adminServicesCacheTime');
                 fetchServices();
+            } else {
+                const err = await response.json().catch(() => ({}));
+                setSuccessMessage(err.error || 'Failed to update service. Please try again.');
+                setTimeout(() => setSuccessMessage(''), 4000);
             }
         } catch (error) {
             console.error('Error updating service:', error);
-            setSuccessMessage('Failed to update service');
-            setTimeout(() => setSuccessMessage(''), 3000);
+            setSuccessMessage('Network error. Please check your connection.');
+            setTimeout(() => setSuccessMessage(''), 4000);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -546,9 +564,10 @@ export default function ServicesPage() {
                                     <button
                                         type="submit"
                                         className="btn btn-primary"
-                                        style={{ flex: 1 }}
+                                        disabled={isSubmitting}
+                                        style={{ flex: 1, opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                                     >
-                                        Add Service
+                                        {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : 'ADD SERVICE'}
                                     </button>
                                 </div>
                             </form>
@@ -702,9 +721,10 @@ export default function ServicesPage() {
                                     <button
                                         type="submit"
                                         className="btn btn-primary"
-                                        style={{ flex: 1 }}
+                                        disabled={isSubmitting}
+                                        style={{ flex: 1, opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                                     >
-                                        Update Service
+                                        {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : 'Update Service'}
                                     </button>
                                 </div>
                             </form>

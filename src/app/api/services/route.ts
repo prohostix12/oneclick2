@@ -5,6 +5,14 @@ import { ObjectId } from 'mongodb';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '10mb',
+        },
+    },
+};
+
 export async function GET() {
     try {
         const db = await getDatabase();
@@ -50,6 +58,47 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error('Error adding service:', error);
         return NextResponse.json({ error: 'Failed to add service' }, { status: 500 });
+    }
+}
+
+export async function PUT(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+        }
+
+        const body = await request.json();
+        const { name, description, category, items, image } = body;
+
+        if (!name || !description || !category) {
+            return NextResponse.json(
+                { error: 'Name, description, and category are required' },
+                { status: 400 }
+            );
+        }
+
+        const db = await getDatabase();
+        await db.collection('services').updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    name,
+                    description,
+                    category,
+                    image: image || '',
+                    items: items ? items.filter((item: string) => item.trim()) : [],
+                    updatedAt: new Date()
+                }
+            }
+        );
+
+        return NextResponse.json({ message: 'Service updated successfully' });
+    } catch (error) {
+        console.error('Error updating service:', error);
+        return NextResponse.json({ error: 'Failed to update service' }, { status: 500 });
     }
 }
 

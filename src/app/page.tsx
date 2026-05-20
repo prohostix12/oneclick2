@@ -297,7 +297,7 @@ export default function Home() {
           {/* Video that plays once and fades out */}
           {shouldRenderVideo && (
             <video
-              src="/my-bg-video.mp4"
+              src="/my-bg-video.mp4?v=3"
               autoPlay
               muted
               playsInline
@@ -325,8 +325,8 @@ export default function Home() {
 
         <motion.div 
           className="hero-content"
-          style={{ rotateX, rotateY, width: '100%', maxWidth: '1200px' }}
-          initial={{ opacity: 0, rotateX: 20, y: 100, scale: 0.8 }}
+          style={{ rotateX: isMobile ? 0 : rotateX, rotateY: isMobile ? 0 : rotateY, width: '100%', maxWidth: '1200px' }}
+          initial={{ opacity: 0, rotateX: isMobile ? 0 : 20, y: isMobile ? 40 : 100, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
           transition={{ duration: 1.0, type: "spring", bounce: 0.3 }}
         >
@@ -339,20 +339,21 @@ export default function Home() {
               transition={{ duration: 1.8, ease: "easeInOut" }}
             >
               <h1 className="hero-title-main" style={{
-                fontSize: 'clamp(3rem, 7.5vw, 6.2rem)',
+                fontSize: isMobile ? 'clamp(2.4rem, 11vw, 3.2rem)' : 'clamp(3rem, 7.5vw, 6.2rem)',
                 fontWeight: 900,
                 color: '#fff',
                 textShadow: '0 8px 30px rgba(0,0,0,0.6)',
-                letterSpacing: '-2px',
+                letterSpacing: isMobile ? '-1px' : '-2px',
                 margin: 0,
                 lineHeight: 1,
                 textTransform: 'uppercase',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                textAlign: isMobile ? 'center' : 'left'
               }}>
                 <span style={{ color: '#e61e25' }}>AT</span>TRACTIVE
               </h1>
               
-              <div className="hero-btn-group" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
+              <div className="hero-btn-group" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem', justifyContent: isMobile ? 'center' : 'flex-start', width: '100%' }}>
                 <Link href="/contact" className="btn btn-primary" style={{ 
                   padding: isMobile ? '0.75rem 1.2rem' : '1rem 1.5rem', 
                   fontSize: isMobile ? '0.75rem' : '0.9rem' 
@@ -647,7 +648,7 @@ export default function Home() {
 
                 <div className="portfolio-divider"></div>
                 
-                <p className="portfolio-desc" style={{ marginBottom: '1.4rem' }}>{item.desc}</p>
+                <p className="portfolio-desc" style={{ marginBottom: 'auto' }}>{item.desc}</p>
 
                 <button
                   onClick={() => setEnquireItem(item.title)}

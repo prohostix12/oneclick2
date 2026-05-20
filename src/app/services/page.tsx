@@ -7,6 +7,66 @@ import { useState, useEffect } from 'react';
 import ServiceMap from '@/app/components/ServiceMap';
 import EnquireNowModal from '@/components/EnquireNowModal';
 
+// Default static content (used as fallback)
+const DEFAULT_STATIC_SERVICES = [
+  {
+    title: "Branding & Corporate Identity",
+    image: "/signage-branding.png",
+    description: "We'll help you create a look that people remember. No more generic designs—just a brand that feels like you.",
+    details: ["Professional logos", "Brand identity guides", "Office & interior branding", "Consistent look across all locations"],
+    link: "/services/branding"
+  },
+  {
+    title: "Digital Printed Graphics",
+    image: "/signage-digital-print.png",
+    description: "High-resolution prints that look sharp from across the street. Perfect for windows and massive banners.",
+    details: ["Large format printing", "Wall & window graphics", "Privacy films", "Stickers & floor graphics", "Custom wallpaper"],
+    link: "/services/digital-graphics"
+  },
+  {
+    title: "Vehicle Graphics & Fleet Branding",
+    image: "/signage-vehicle.png",
+    description: "Turn your car, van, or truck into a mobile billboard. One of the best ways to get seen all over the city.",
+    details: ["Full & partial wraps", "Corporate fleet branding", "Safety & reflective graphics", "Mobile advertising"],
+    link: "/services/vehicle-branding"
+  },
+  {
+    title: "Exhibition, Display & POS Solutions",
+    image: "/signage-production.png",
+    description: "Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.",
+    details: ["Outdoor signboards", "Indoor office signs", "3D illuminated letters", "Wayfinding signs", "Retail & mall signage"],
+    link: "/services/signage"
+  },
+  {
+    title: "Signage Production & Installation",
+    image: "/signage-exhibition.png",
+    description: "Exhibition booths and kiosks that make people want to walk over and say hi.",
+    details: ["Custom exhibition stands", "Portable kiosks", "Pop-up backdrops", "Roll-up banners", "In-store displays"],
+    link: "/services/exhibition"
+  },
+  {
+    title: "Cladding & Facade Solutions",
+    image: "/signage-cladding.png",
+    description: "Give your building a fresh, modern look. Turning old storefronts into local landmarks.",
+    details: ["ACP cladding", "Aluminum paneling", "Shopfront branding", "Modern architectural finishes", "Integrated signage"],
+    link: "/services/cladding"
+  }
+];
+
+const DEFAULT_ACCORDION = [
+  { title: "You'll be seen", content: "We pick the best spots so your brand gets the most attention from people passing by." },
+  { title: "All over the UAE", content: "From the busy streets of Dubai to the main hubs in Abu Dhabi, we've got you covered." },
+  { title: "No waiting around", content: "We work quickly to get your campaign live so you can start seeing results sooner." },
+  { title: "We handle everything", content: "From the first design to the final install, we take care of the hard work for you." }
+];
+
+const DEFAULT_WHY_POINTS = [
+  { title: "Extensive Network", desc: "Access the most premium advertising locations across all of UAE." },
+  { title: "Premium Quality", desc: "We use high-grade, durable materials to ensure long-lasting brand impact." },
+  { title: "Strategic Precision", desc: "Data-driven placements that reach your specific target demographic." },
+  { title: "Full Scale Service", desc: "From design and planning to installation and legal approvals." }
+];
+
 const cardReveal: Variants = {
   hidden: { 
     opacity: 0, 
