@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -13,6 +13,13 @@ export default function AdminLoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const isLoggedIn = localStorage.getItem('adminAuth') === 'true';
+        if (isLoggedIn) {
+            router.push('/admin');
+        }
+    }, [router]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();

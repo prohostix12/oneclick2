@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Home, LogOut, MessageSquare, Briefcase, TrendingUp, Menu, X, Layout, Users, Gift } from 'lucide-react';
+import { Home, LogOut, MessageSquare, Briefcase, TrendingUp, Menu, X, Layout, Users, Gift, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -181,6 +181,38 @@ export default function AdminSidebar() {
                     <div style={getNavItemStyle('/admin/projects')}>
                         <Layout size={20} color={getNavIconColor('/admin/projects')} /> 
                         <span style={getNavTextStyle('/admin/projects')}>Projects</span>
+                    </div>
+                </Link>
+
+                <Link href="/" style={{ textDecoration: 'none' }} onClick={() => setIsMobileMenuOpen(false)}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        padding: '1rem 1.2rem',
+                        borderRadius: '12px',
+                        color: 'rgba(255,255,255,0.6)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s',
+                        background: 'transparent',
+                        borderLeft: '4px solid transparent',
+                        textDecoration: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.color = '#ffffff';
+                        const icon = e.currentTarget.querySelector('svg');
+                        if (icon) icon.style.color = '#e61e25';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
+                        const icon = e.currentTarget.querySelector('svg');
+                        if (icon) icon.style.color = 'rgba(255,255,255,0.6)';
+                    }}
+                    >
+                        <Globe size={20} color="rgba(255,255,255,0.6)" style={{ transition: 'color 0.3s' }} /> 
+                        <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>View Website</span>
                     </div>
                 </Link>
             </nav>

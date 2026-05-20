@@ -9,12 +9,19 @@ import Logo from './Logo';
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    // Check if logged in as admin
+    if (typeof window !== 'undefined') {
+      setIsAdmin(localStorage.getItem('adminAuth') === 'true');
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -74,7 +81,11 @@ export default function Navbar() {
 
             {/* Desktop Login Button */}
             <div className={styles.desktopNav}>
-              <Link href="/admin/login" className={styles.btnLogin} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>Login</Link>
+              {isAdmin ? (
+                <Link href="/admin" className={styles.btnLogin} style={{ padding: '8px 20px', fontSize: '0.85rem', background: '#e61e25', borderColor: '#e61e25' }}>Admin Portal</Link>
+              ) : (
+                <Link href="/admin/login" className={styles.btnLogin} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>Login</Link>
+              )}
             </div>
 
             {/* Mobile Hamburger */}
@@ -126,7 +137,11 @@ export default function Navbar() {
         <Link href="/services" className={styles.mobileNavLink} onClick={closeMobileMenu}>Services</Link>
         <Link href="/contact" className={styles.mobileNavLink} onClick={closeMobileMenu}>Contact</Link>
         <Link href="/about" className={styles.mobileNavLink} onClick={closeMobileMenu}>About</Link>
-        <Link href="/admin/login" className={`${styles.mobileNavLink} ${styles.mobileNavLinkLogin}`} onClick={closeMobileMenu}>Admin Login</Link>
+        {isAdmin ? (
+          <Link href="/admin" className={`${styles.mobileNavLink} ${styles.mobileNavLinkLogin}`} style={{ color: '#e61e25', fontWeight: 'bold' }} onClick={closeMobileMenu}>Admin Portal</Link>
+        ) : (
+          <Link href="/admin/login" className={`${styles.mobileNavLink} ${styles.mobileNavLinkLogin}`} onClick={closeMobileMenu}>Admin Login</Link>
+        )}
       </div>
     </>
   );
