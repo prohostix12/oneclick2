@@ -311,7 +311,7 @@ body {
 
   /* Orbit circle scale correction on mobile */
   .animated-circle-container {
-    scale: 0.8 !important;
+    scale: 0.88 !important;
     transform-origin: center !important;
     margin-bottom: -5.5rem !important; /* Pulls the ATTRACTIVE text up directly below the scaled globe */
     margin-top: -1rem !important;

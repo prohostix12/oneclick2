@@ -250,33 +250,33 @@
 
 @media (max-width: 768px) {
   .animated-circle-container {
-    width: 260px !important;
-    height: 260px !important;
+    width: 300px !important;
+    height: 300px !important;
   }
   .spinning-ring-1 {
-    width: 200px !important;
-    height: 200px !important;
+    width: 235px !important;
+    height: 235px !important;
   }
   .spinning-ring-2 {
-    width: 215px !important;
-    height: 215px !important;
+    width: 250px !important;
+    height: 250px !important;
   }
   .spinning-ring-3 {
-    width: 230px !important;
-    height: 230px !important;
+    width: 265px !important;
+    height: 265px !important;
   }
   .glowing-orb {
-    width: 170px !important;
-    height: 170px !important;
-    padding: 0.8rem !important;
+    width: 200px !important;
+    height: 200px !important;
+    padding: 1rem !important;
   }
   .service-name {
-    font-size: 0.8rem !important;
+    font-size: 0.95rem !important;
   }
   .service-name.long-name {
-    font-size: 0.7rem !important;
+    font-size: 0.82rem !important;
   }
   .service-name.medium-name {
-    font-size: 0.75rem !important;
+    font-size: 0.88rem !important;
   }
 }

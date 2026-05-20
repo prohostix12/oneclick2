@@ -27,7 +27,7 @@ export default function Logo({ size = 'medium', className = '', showFullText = f
         height={config.height}
         priority
         style={{
-          width: 'auto',
+          width: '100%',
           height: 'auto',
           maxWidth: config.width,
         }}

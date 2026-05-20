@@ -123,6 +123,7 @@ const carouselPages = [
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -141,6 +142,8 @@ export default function Home() {
 
   useEffect(() => {
     const isAdminUser = typeof window !== 'undefined' && localStorage.getItem('adminAuth') === 'true';
+    setIsAdmin(isAdminUser);
+    setMounted(true);
     if (isAdminUser || (typeof window !== 'undefined' && (window as any).__videoPlayed)) {
       setVideoEnded(true);
       setShowContent(true);
@@ -194,7 +197,7 @@ export default function Home() {
     },
     { 
       name: 'Downtown Dubai', 
-      image: '/home-hero-bg.png'
+      image: '/premium_home_hero.png'
     },
     { 
       name: 'Jumeirah Beach', 
@@ -277,7 +280,7 @@ export default function Home() {
           style={{ x: bgX, y: bgY }}
         >
           {/* Static image behind the video, rendered only after video ends */}
-          {videoEnded && (
+          {(videoEnded || isAdmin) && (
             <img
               src="/hero-background.png.png"
               alt="Hero Background"
@@ -329,17 +332,17 @@ export default function Home() {
         <motion.div 
           className="hero-content"
           style={{ rotateX: isMobile ? 0 : rotateX, rotateY: isMobile ? 0 : rotateY, width: '100%', maxWidth: '1200px' }}
-          initial={{ opacity: 0, rotateX: isMobile ? 0 : 20, y: isMobile ? 40 : 100, scale: 0.8 }}
+          initial={isAdmin ? { opacity: 1, rotateX: 0, y: 0, scale: 1 } : { opacity: 0, rotateX: isMobile ? 0 : 20, y: isMobile ? 40 : 100, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-          transition={{ duration: 1.0, type: "spring", bounce: 0.3 }}
+          transition={isAdmin ? { duration: 0 } : { duration: 1.0, type: "spring", bounce: 0.3 }}
         >
           <div className="hero-grid-container">
             {/* The Text and Buttons side */}
             <motion.div
               className="hero-text-side"
-              initial={{ opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
-              animate={showContent ? { opacity: 1, x: 0, y: isMobile ? 0 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
-              transition={{ duration: 1.8, ease: "easeInOut" }}
+              initial={isAdmin ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
+              animate={(showContent || isAdmin) ? { opacity: 1, x: 0, y: isMobile ? 0 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
+              transition={isAdmin ? { duration: 0 } : { duration: 1.8, ease: "easeInOut" }}
             >
               <h1 className="hero-title-main" style={{
                 fontSize: isMobile ? 'clamp(2.4rem, 11vw, 3.2rem)' : 'clamp(3rem, 7.5vw, 6.2rem)',
@@ -376,8 +379,8 @@ export default function Home() {
             {/* The Globe side */}
             <motion.div
               className="hero-globe-side"
-              initial={{ x: isMobile ? 0 : '-22vw', y: isMobile ? 30 : 0, scale: isMobile ? 1.05 : 1.15, opacity: 0 }}
-              animate={showContent ? {
+              initial={isAdmin ? { x: 0, y: isMobile ? -45 : 0, scale: isMobile ? 0.75 : 1.0, opacity: 1 } : { x: isMobile ? 0 : '-22vw', y: isMobile ? 30 : 0, scale: isMobile ? 1.05 : 1.15, opacity: 0 }}
+              animate={(showContent || isAdmin) ? {
                 x: 0,
                 y: isMobile ? -45 : 0,
                 scale: isMobile ? 0.75 : 1.0,
@@ -386,11 +389,11 @@ export default function Home() {
                 x: isMobile ? 0 : '-22vw',
                 y: isMobile ? 30 : 0,
                 scale: isMobile ? 1.05 : 1.15,
-                opacity: 1
+                opacity: 0
               }}
-              transition={{ duration: 1.8, ease: "easeInOut" }}
+              transition={isAdmin ? { duration: 0 } : { duration: 1.8, ease: "easeInOut" }}
             >
-              <AnimatedServicesCircle services={heroServices} skipDelay={videoEnded} />
+              <AnimatedServicesCircle services={heroServices} skipDelay={videoEnded || isAdmin} />
             </motion.div>
           </div>
         </motion.div>
@@ -398,9 +401,9 @@ export default function Home() {
         {/* Floating Social Icons Bar on Right Side of Landing Page */}
         <motion.div 
           className="floating-social-bar"
-          initial={{ opacity: 0, x: 50 }}
-          animate={showContent ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-          transition={{ delay: showContent ? 1.0 : 0, duration: 0.8 }}
+          initial={isAdmin ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+          animate={(showContent || isAdmin) ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+          transition={isAdmin ? { duration: 0 } : { delay: showContent ? 1.0 : 0, duration: 0.8 }}
         >
           <a href="https://www.instagram.com/oneclick_advertisement?igsh=NzNwaGo2b2VwbDNh" target="_blank" rel="noopener noreferrer" className="social-icon-btn instagram" aria-label="Instagram">
             <Instagram size={22} />
@@ -417,9 +420,9 @@ export default function Home() {
 
         <motion.div 
           className="claim-btn-floating-container"
-          initial={{ opacity: 0, y: 100, scale: 0 }}
+          initial={isAdmin ? { opacity: 1, y: 0, scale: 0.45 } : { opacity: 0, y: 100, scale: 0 }}
           animate={{ opacity: 1, y: 0, scale: 0.45 }}
-          transition={{ delay: 1.5, type: "spring", stiffness: 260, damping: 20 }}
+          transition={isAdmin ? { duration: 0 } : { delay: 1.5, type: "spring", stiffness: 260, damping: 20 }}
           style={{ 
             position: 'absolute', 
             bottom: '1rem', 

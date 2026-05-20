@@ -70,9 +70,9 @@ export default function AnimatedServicesCircle({ services, skipDelay = false }: 
       {/* Inner glowing 3D orb */}
       <motion.div 
         className="glowing-orb"
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={skipDelay ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.2, type: "spring", bounce: 0.4 }}
+        transition={skipDelay ? { duration: 0 } : { duration: 1.2, type: "spring", bounce: 0.4 }}
       >
         {/* Rotating Globe Background Elements */}
         <motion.div
