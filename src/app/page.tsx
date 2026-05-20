@@ -298,6 +298,8 @@ export default function Home() {
           {shouldRenderVideo && (
             <video
               src="/my-bg-video.mp4?v=3"
+              preload="auto"
+              poster="/hero-background.png.png"
               autoPlay
               muted
               playsInline
