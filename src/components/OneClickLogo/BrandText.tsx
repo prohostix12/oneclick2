@@ -82,15 +82,15 @@ export const BrandText: React.FC<BrandTextProps> = ({
               fill="none"
               stroke="var(--logo-text)"
               strokeWidth="22"
-{/* Globe inside O */}
-<g className="globe" style={{ pointerEvents: 'none' }}>
-  <circle cx="60" cy="60" r="30" fill="none" stroke="var(--logo-accent)" strokeWidth="4" />
-  <path d="M60,30 a30,30 0 0,1 0,60" fill="none" stroke="var(--logo-accent)" strokeWidth="2"/>
-  <path d="M30,60 a30,30 0 0,1 60,0" fill="none" stroke="var(--logo-accent)" strokeWidth="2"/>
-</g>
               strokeLinecap="round"
               strokeLinejoin="round"
             />
+            {/* Globe inside O */}
+            <g style={{ pointerEvents: 'none' }}>
+              <circle cx="60" cy="60" r="30" fill="none" stroke="var(--logo-accent)" strokeWidth="4" />
+              <path d="M60,30 a30,30 0 0,1 0,60" fill="none" stroke="var(--logo-accent)" strokeWidth="2"/>
+              <path d="M30,60 a30,30 0 0,1 60,0" fill="none" stroke="var(--logo-accent)" strokeWidth="2"/>
+            </g>
           </svg>
           
           {/* FIRST red square - smaller, positioned above-right */}
