@@ -33,7 +33,7 @@ export default function Navbar() {
       {/* ===== NAVBAR WRAPPER — Always fixed, always on top ===== */}
       <div
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: 8,
           left: 0,
           right: 0,
@@ -41,7 +41,7 @@ export default function Navbar() {
           zIndex: 99999,
           display: 'flex',
           justifyContent: 'center',
-          padding: '12px 16px',
+          padding: 'clamp(6px, 1.5vw, 12px) 16px',
           pointerEvents: 'none',
         }}
       >
@@ -63,7 +63,7 @@ export default function Navbar() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '8px 24px',
+              padding: 'clamp(5px, 1vw, 8px) clamp(12px, 2vw, 24px)',
             }}
           >
             {/* Logo */}

@@ -97,3 +97,20 @@
     display: flex !important;
   }
 }
+
+/* Mobile navbar height reduction */
+@media (max-width: 768px) {
+  .navbarWrapper {
+    padding: 6px 10px !important;
+    top: 4px !important;
+  }
+
+  .navInner {
+    padding: 5px 14px !important;
+  }
+
+  .navbarLogo svg,
+  .navbarLogo img {
+    height: 28px !important;
+  }
+}

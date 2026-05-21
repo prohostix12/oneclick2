@@ -6,7 +6,8 @@ import { ArrowRight, MapPin, Phone, Mail, ChevronDown, Sparkles, Megaphone, Face
 import Link from 'next/link';
 import PremiumScratchCard from '@/components/PremiumScratchCard';
 import EnquireNowModal from '@/components/EnquireNowModal';
-import AnimatedServicesCircle from '@/components/AnimatedServicesCircle';
+import CinematicDoubleExposure from '@/components/CinematicDoubleExposure';
+
 
 import './black-cards.css';
 import './home.css';
@@ -139,22 +140,17 @@ export default function Home() {
   const [shouldRenderVideo, setShouldRenderVideo] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [heroServiceIndex, setHeroServiceIndex] = useState(0);
 
   useEffect(() => {
     const isAdminUser = typeof window !== 'undefined' && localStorage.getItem('adminAuth') === 'true';
     setIsAdmin(isAdminUser);
     setMounted(true);
-    if (isAdminUser || (typeof window !== 'undefined' && (window as any).__videoPlayed)) {
-      setVideoEnded(true);
+    setVideoEnded(true);
+    const timer = setTimeout(() => {
       setShowContent(true);
-      setShouldRenderVideo(false);
-    } else {
-      setShouldRenderVideo(true);
-      const timer = setTimeout(() => {
-        setShowContent(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    }, 400);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -220,6 +216,13 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      setHeroServiceIndex((prev) => (prev + 1) % heroServices.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
       setCurrentLocationIndex((prev) => (prev + 1) % locations.length);
     }, 2500);
     return () => clearInterval(interval);
@@ -275,126 +278,81 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section" onMouseMove={handleHeroMouseMove}>
 
+        {/* Clean, high-key airy background with a very faint, washed city skyline at the bottom */}
+        <div className="hero-bg-wrap">
+          <div className="hero-clean-bg" />
+          <div className="hero-faint-skyline" />
+          <div className="hero-light-base" />
+          <div className="hero-light-vignette" />
+        </div>
+
         <motion.div
-          className="hero-background"
-          style={{ x: bgX, y: bgY }}
+          className="hero-content hero-split"
+          initial={isAdmin ? { opacity: 1 } : { opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={isAdmin ? { duration: 0 } : { duration: 0.9, type: 'spring', bounce: 0.25 }}
         >
-          {/* Static image behind the video, rendered only after video ends */}
-          {(videoEnded || isAdmin) && (
-            <img
-              src="/hero-background.png.png"
-              alt="Hero Background"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
-              }}
-            />
-          )}
-
-          {/* Overlay only for the static image, placed behind the video */}
-          <div className="hero-overlay"></div>
-
-          {/* Video that plays once and fades out */}
-          {shouldRenderVideo && (
-            <video
-              src="/my-bg-video.mp4?v=3"
-              preload="auto"
-              poster="/hero-background.png.png"
-              autoPlay
-              muted
-              playsInline
-              onEnded={() => {
-                setVideoEnded(true);
-                if (typeof window !== 'undefined') {
-                  (window as any).__videoPlayed = true;
-                }
-              }}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                opacity: videoEnded ? 0 : 1,
-                transition: 'opacity 1.2s ease-in-out',
-                pointerEvents: 'none',
-                zIndex: 2
-              }}
-            />
-          )}
-        </motion.div>
-
-        <motion.div 
-          className="hero-content"
-          style={{ rotateX: isMobile ? 0 : rotateX, rotateY: isMobile ? 0 : rotateY, width: '100%', maxWidth: '1200px' }}
-          initial={isAdmin ? { opacity: 1, rotateX: 0, y: 0, scale: 1 } : { opacity: 0, rotateX: isMobile ? 0 : 20, y: isMobile ? 40 : 100, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-          transition={isAdmin ? { duration: 0 } : { duration: 1.0, type: "spring", bounce: 0.3 }}
-        >
-          <div className="hero-grid-container">
-            {/* The Text and Buttons side */}
-            <motion.div
-              className="hero-text-side"
-              initial={isAdmin ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
-              animate={(showContent || isAdmin) ? { opacity: 1, x: 0, y: isMobile ? 0 : 0 } : { opacity: 0, x: isMobile ? 0 : -100, y: isMobile ? 80 : 0 }}
-              transition={isAdmin ? { duration: 0 } : { duration: 1.8, ease: "easeInOut" }}
+          {/* ── LEFT: Text ── */}
+          <div className="hero-text-side">
+            <motion.h1
+              className="hero-headline"
+              initial={isAdmin ? { opacity: 1 } : { opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.7, type: 'spring', bounce: 0.3 }}
             >
-              <h1 className="hero-title-main" style={{
-                fontSize: isMobile ? 'clamp(2.4rem, 11vw, 3.2rem)' : 'clamp(3rem, 7.5vw, 6.2rem)',
-                fontWeight: 900,
-                color: '#fff',
-                textShadow: '0 8px 30px rgba(0,0,0,0.6)',
-                letterSpacing: isMobile ? '-1px' : '-2px',
-                margin: 0,
-                lineHeight: 1,
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-                textAlign: isMobile ? 'center' : 'left'
-              }}>
-                <span style={{ color: '#e61e25' }}>AT</span>TRACTIVE
-              </h1>
-              
-              <div className="hero-btn-group" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem', justifyContent: isMobile ? 'center' : 'flex-start', width: '100%' }}>
-                <Link href="/contact" className="btn btn-primary" style={{ 
-                  padding: isMobile ? '0.75rem 1.2rem' : '1rem 1.5rem', 
-                  fontSize: isMobile ? '0.75rem' : '0.9rem' 
-                }}>
-                  LET'S BUILD YOUR CAMPAIGN <ArrowRight size={isMobile ? 14 : 18} />
-                </Link>
-                <Link href="/services" className="btn btn-secondary" style={{ 
-                  padding: isMobile ? '0.75rem 1.2rem' : '1rem 1.5rem', 
-                  fontSize: isMobile ? '0.75rem' : '0.9rem', 
-                  background: 'transparent' 
-                }}>
-                  LEARN MORE <ArrowRight size={isMobile ? 14 : 18} />
-                </Link>
+              We Make<br />
+              <span className="hero-headline-accent">Brands Visible</span>
+            </motion.h1>
+
+
+
+            <motion.div
+              className="hero-cta-row"
+              initial={isAdmin ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55, duration: 0.6 }}
+            >
+              <Link href="/services" className="btn btn-primary">
+                Explore Services <ArrowRight size={18} />
+              </Link>
+              <Link href="/contact" className="btn hero-btn-outline">
+                Get a Quote
+              </Link>
+            </motion.div>
+
+            {/* Cycling service name pill */}
+          </div>
+
+          {/* ── RIGHT: Cycling Service Image ── */}
+          <div className="hero-image-side">
+            <div className="hero-image-frame">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={heroServiceIndex}
+                  src={heroServices[heroServiceIndex].img}
+                  alt={heroServices[heroServiceIndex].name}
+                  className="hero-service-img"
+                  initial={{ opacity: 0, scale: 1.08, x: 30 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, x: -30 }}
+                  transition={{ duration: 0.85, ease: 'easeInOut' }}
+                />
+              </AnimatePresence>
+              {/* Overlay label */}
+              <div className="hero-img-label">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={heroServiceIndex}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    {heroServices[heroServiceIndex].name}
+                  </motion.span>
+                </AnimatePresence>
               </div>
-            </motion.div>
-
-            {/* The Globe side */}
-            <motion.div
-              className="hero-globe-side"
-              initial={isAdmin ? { x: 0, y: isMobile ? -45 : 0, scale: isMobile ? 0.75 : 1.0, opacity: 1 } : { x: isMobile ? 0 : '-22vw', y: isMobile ? 30 : 0, scale: isMobile ? 1.05 : 1.15, opacity: 0 }}
-              animate={(showContent || isAdmin) ? {
-                x: 0,
-                y: isMobile ? -45 : 0,
-                scale: isMobile ? 0.75 : 1.0,
-                opacity: 1
-              } : {
-                x: isMobile ? 0 : '-22vw',
-                y: isMobile ? 30 : 0,
-                scale: isMobile ? 1.05 : 1.15,
-                opacity: 0
-              }}
-              transition={isAdmin ? { duration: 0 } : { duration: 1.8, ease: "easeInOut" }}
-            >
-              <AnimatedServicesCircle services={heroServices} skipDelay={videoEnded || isAdmin} />
-            </motion.div>
+            </div>
           </div>
         </motion.div>
 
