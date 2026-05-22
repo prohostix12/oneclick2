@@ -29,14 +29,48 @@ export default function SettingsPage() {
         }
     }, [router]);
 
-    const handleSave = () => {
+    // Load existing settings
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        (async () => {
+            try {
+                const res = await fetch('/api/settings');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && (data.email || data.phone || data.location)) {
+                        setContact({
+                            email: data.email || contact.email,
+                            phone: data.phone || contact.phone,
+                            location: data.location || contact.location
+                        });
+                    }
+                }
+            } catch (e) {
+                // ignore
+            }
+        })();
+    }, [isAuthenticated]);
+
+    const handleSave = async () => {
         setIsSaving(true);
-        // In a real app, this would be an API call
-        setTimeout(() => {
+        try {
+            const res = await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(contact)
+            });
+            if (res.ok) {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+            } else {
+                const err = await res.json().catch(() => ({}));
+                console.error('Failed saving settings', err);
+            }
+        } catch (e) {
+            console.error('Save settings error', e);
+        } finally {
             setIsSaving(false);
-            setSaved(true);
-            setTimeout(() => setSaved(false), 3000);
-        }, 1000);
+        }
     };
 
     if (!isAuthenticated) return null;

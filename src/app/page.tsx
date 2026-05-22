@@ -369,7 +369,7 @@ export default function Home() {
           <a href="https://www.facebook.com/oneclickadvertisement/" target="_blank" rel="noopener noreferrer" className="social-icon-btn facebook" aria-label="Facebook">
             <Facebook size={22} />
           </a>
-          <a href="https://wa.me/971524065110" target="_blank" rel="noopener noreferrer" className="social-icon-btn whatsapp" aria-label="WhatsApp">
+          <a href="https://wa.me/971552574786" target="_blank" rel="noopener noreferrer" className="social-icon-btn whatsapp" aria-label="WhatsApp">
             <WhatsAppIcon size={22} />
           </a>
         </motion.div>

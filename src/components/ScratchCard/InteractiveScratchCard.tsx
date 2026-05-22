@@ -333,7 +333,7 @@ export default function InteractiveScratchCard({ onFormReveal }: ScratchCardProp
                     Fill in your details to get started
                   </p>
 
-                      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%' }}>
                         <input
                           type="text"
                           name="fullName"

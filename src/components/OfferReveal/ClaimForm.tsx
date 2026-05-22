@@ -64,7 +64,7 @@ const ClaimForm: React.FC<ClaimFormProps> = ({ offer, onClose, onSubmit }) => {
         animate={{ scale: 1, y: 0, opacity: 1 }}
         exit={{ scale: 0.85, y: 40, opacity: 0 }}
         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-        className="relative w-full max-w-lg overflow-hidden rounded-3xl shadow-2xl"
+        className="relative w-full max-w-sm overflow-hidden rounded-2xl shadow-2xl"
         style={{
           background: 'linear-gradient(160deg, #111 0%, #0a0a0a 100%)',
           border: `1px solid ${color}30`,
@@ -88,34 +88,34 @@ const ClaimForm: React.FC<ClaimFormProps> = ({ offer, onClose, onSubmit }) => {
 
         <AnimatePresence mode="wait">
           {!submitted ? (
-            <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 pt-10">
+            <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 pt-7">
               {/* Offer badge */}
-              <div className="flex items-center gap-3 mb-7">
+              <div className="flex items-center gap-3 mb-5">
                 <div
-                  className="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest"
-                  style={{ background: `${color}15`, color, border: `1px solid ${color}35` }}
+                  className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest"
+                  style={{ background: `${color}15`, color, border: `1px solid ${color}35`, fontSize: '0.7rem' }}
                 >
                   🏆 {offer.discount} — {offer.title}
                 </div>
               </div>
 
-              <h2 className="text-3xl font-black text-white mb-1">
+              <h2 className="text-2xl font-black text-white mb-1">
                 Claim Your Reward
               </h2>
-              <p className="text-white/40 text-sm mb-8">
+              <p className="text-white/40 text-xs mb-6">
                 Fill in your details and we'll get in touch to activate the offer.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3" style={{ width: '100%' }}>
                 {inputFields.map(({ id, label, placeholder, type, icon: Icon, required }) => (
-                  <div key={id}>
-                    <label className="block text-xs font-black uppercase tracking-widest mb-2" style={{ color: `${color}aa` }}>
+                  <div key={id} style={{ width: '100%' }}>
+                    <label className="block text-xs font-black uppercase tracking-widest mb-1.5" style={{ color: `${color}aa`, fontSize: '0.7rem' }}>
                       {label}
                     </label>
-                    <div className="relative">
+                    <div className="relative" style={{ width: '100%' }}>
                       <Icon
-                        size={18}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-300"
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-300"
                         style={{ color: focused === id ? color : 'rgba(255,255,255,0.2)' }}
                       />
                       <input
@@ -126,11 +126,13 @@ const ClaimForm: React.FC<ClaimFormProps> = ({ offer, onClose, onSubmit }) => {
                         onFocus={() => setFocused(id)}
                         onBlur={() => setFocused(null)}
                         onChange={(e) => setValues((v) => ({ ...v, [id]: e.target.value }))}
-                        className="w-full pl-12 pr-4 py-4 rounded-xl text-white text-sm font-medium outline-none transition-all placeholder:text-white/20"
+                        className="w-full pl-10 pr-3 py-2.5 rounded-lg text-white text-xs font-medium outline-none transition-all placeholder:text-white/20"
                         style={{
                           background: 'rgba(255,255,255,0.04)',
                           border: `1px solid ${focused === id ? color : 'rgba(255,255,255,0.08)'}`,
-                          boxShadow: focused === id ? `0 0 0 3px ${color}15` : 'none',
+                          boxShadow: focused === id ? `0 0 0 2px ${color}15` : 'none',
+                          boxSizing: 'border-box',
+                          width: '100%'
                         }}
                       />
                     </div>

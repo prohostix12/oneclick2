@@ -8,7 +8,7 @@ import Logo from '../../components/Logo';
 
 export default function AdminLoginPage() {
     const router = useRouter();
-    const [formData, setFormData] = useState({ email: 'admin@gmail.com', password: 'password123456' });
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -322,11 +322,13 @@ export default function AdminLoginPage() {
                         <div className="form-group">
                             <input
                                 type="email"
+                                name="username"
+                                autoComplete="username"
                                 placeholder="Email"
                                 className="form-input"
                                 value={formData.email}
-                                readOnly
-                                style={{ cursor: 'not-allowed', opacity: 0.8 }}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                required
                             />
                         </div>
 
@@ -334,6 +336,8 @@ export default function AdminLoginPage() {
                             <div className="password-container">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    autoComplete="current-password"
                                     placeholder="Password"
                                     className="form-input"
                                     value={formData.password}

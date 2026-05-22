@@ -7,9 +7,30 @@ import Logo from './Logo';
 
 export default function Footer() {
   const [currentYear, setCurrentYear] = useState<number | null>(null);
+  const [siteContact, setSiteContact] = useState({ email: 'hello@oneclickadv.ae', phone: '+971 52 406 5110', location: 'Dubai, United Arab Emirates' });
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data) {
+            setSiteContact({
+              email: data.email || siteContact.email,
+              phone: data.phone || siteContact.phone,
+              location: data.location || siteContact.location
+            });
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
   }, []);
 
   return (
@@ -57,11 +78,11 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <Phone size={18} style={{ color: '#888' }} />
-                <a href="tel:+971524065110" style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', fontWeight: 500 }}>+971 52 406 5110</a>
+                <a href={`tel:${siteContact.phone.replace(/\s+/g, '')}`} style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', fontWeight: 500 }}>{siteContact.phone}</a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <Mail size={18} style={{ color: '#888' }} />
-                <a href="mailto:hello@oneclickadv.ae" style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', fontWeight: 500 }}>hello@oneclickadv.ae</a>
+                <a href={`mailto:${siteContact.email}`} style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', fontWeight: 500 }}>{siteContact.email}</a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', marginTop: '0.5rem' }}>
                 <a href="https://www.facebook.com/oneclickadvertisement/" target="_blank" rel="noopener noreferrer" style={{ color: '#888', transition: 'color 0.3s' }} onMouseOver={(e) => e.currentTarget.style.color = '#e61e25'} onMouseOut={(e) => e.currentTarget.style.color = '#888'} aria-label="Facebook">

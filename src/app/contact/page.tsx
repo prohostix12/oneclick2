@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -29,6 +29,32 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+  const [siteContact, setSiteContact] = useState({
+    email: 'hello@oneclickadv.ae',
+    phone: '+971 52 406 5110',
+    location: 'Dubai, United Arab Emirates'
+  });
+
+  // load global contact settings
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data) {
+            setSiteContact({
+              email: data.email || siteContact.email,
+              phone: data.phone || siteContact.phone,
+              location: data.location || siteContact.location
+            });
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
+  }, []);
 
   // 3D Parallax Mouse Tracking
   const mouseX = useMotionValue(0.5);
@@ -633,15 +659,15 @@ export default function ContactPage() {
               <div className="contact-info-list">
                 <div className="info-item">
                   <Mail className="info-item-icon" size={24} />
-                  <a href="mailto:hello@oneclickadv.ae">hello@oneclickadv.ae</a>
+                  <a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>
                 </div>
                 <div className="info-item">
                   <Phone className="info-item-icon" size={24} />
-                  <a href="tel:+971524065110">+971 52 406 5110</a>
+                  <a href={`tel:${siteContact.phone.replace(/\s+/g, '')}`}>{siteContact.phone}</a>
                 </div>
                 <div className="info-item">
                   <MapPin className="info-item-icon" size={24} />
-                  <span>Dubai, United Arab Emirates</span>
+                  <span>{siteContact.location}</span>
                 </div>
               </div>
             </motion.div>
