@@ -617,21 +617,53 @@ export default function AboutPage() {
 
         @media (max-width: 768px) {
           .hero-section {
-            height: 100svh;
-            height: 100vh;
-            min-height: unset;
-            padding: 140px 1.5rem 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            height: 100svh !important;
+            height: 100vh !important;
+            min-height: unset !important;
+            padding: 140px 1.5rem 80px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            perspective: none !important;
+          }
+          .hero-background {
+            position: absolute !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            transform: none !important;
+          }
+          .hero-background img {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            transform: none !important;
+          }
+          .hero-overlay {
+            position: absolute !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
           }
           .hero-content {
             text-align: center !important;
             padding: 1rem !important;
+            transform: none !important;
           }
-          .hero-title { font-size: clamp(2.1rem, 10vw, 3rem); letter-spacing: -1px; margin-bottom: 1rem; text-align: center; }
-          .hero-desc { font-size: 1rem; line-height: 1.5; text-align: center; }
+          .hero-title { font-size: clamp(2.1rem, 10vw, 3rem); letter-spacing: -1px; margin-bottom: 1rem; text-align: center; transform: none !important; }
+          .hero-title span { transform: none !important; }
+          .hero-desc { font-size: 1rem; line-height: 1.5; text-align: center; transform: none !important; }
         }
       `}</style>
 

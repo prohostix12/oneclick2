@@ -641,26 +641,55 @@ export default function ServicesPage() {
 
         @media (max-width: 768px) {
           .hero-services {
-            height: 100svh;
-            height: 100vh;
-            min-height: unset;
-            padding: 140px 1.5rem 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            height: 100svh !important;
+            height: 100vh !important;
+            min-height: unset !important;
+            padding: 140px 1.5rem 80px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            perspective: none !important;
           }
-
+          .hero-background {
+            position: absolute !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            transform: none !important;
+          }
+          .hero-background img {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            transform: none !important;
+          }
+          .hero-content {
+            transform: none !important;
+            transform-style: flat !important;
+          }
           .hero-title {
-            font-size: clamp(2.2rem, 10vw, 3.2rem);
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
+            font-size: clamp(2.2rem, 10vw, 3.2rem) !important;
+            letter-spacing: -1px !important;
+            margin-bottom: 1rem !important;
+            transform: none !important;
           }
-
+          .hero-title .highlight {
+            transform: none !important;
+          }
           .hero-subtitle {
-            font-size: 1rem;
-            padding: 0;
-            margin-bottom: 1.5rem;
+            font-size: 1rem !important;
+            padding: 0 !important;
+            margin-bottom: 1.5rem !important;
+            transform: none !important;
           }
 
           .services-deck {
