@@ -82,6 +82,9 @@ export default function LeadsPage() {
       if (filters.service !== 'All Services') {
         params.append('service', filters.service);
       }
+      if (filters.search.trim()) {
+        params.append('search', filters.search.trim());
+      }
 
       const response = await fetch(`/api/leads?${params}`);
       const data = await response.json();
@@ -107,6 +110,13 @@ export default function LeadsPage() {
     }
     fetchLeads();
   }, [pagination.page, filters.status, filters.service]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchLeads();
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [filters.search]);
 
   const handlePageChange = (newPage: number) => {
     setPagination(prev => ({ ...prev, page: newPage }));

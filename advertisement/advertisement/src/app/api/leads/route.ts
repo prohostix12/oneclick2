@@ -58,12 +58,12 @@ export async function POST(request: NextRequest) {
 
     const database = await getDatabase();
     const leadsCollection = database.collection('leads');
-    const existingLead = await leadsCollection.findOne({ email: email.toLowerCase() });
+    const existingLead = await leadsCollection.findOne({ emailLower: email.toLowerCase() });
 
     if (existingLead) {
       await leadsCollection.updateOne(
-        { email: email.toLowerCase() },
-        { $set: { ...leadData, updatedAt: new Date().toISOString(), status: 'updated' } }
+        { emailLower: email.toLowerCase() },
+        { $set: { ...leadData, updatedAt: new Date().toISOString() } }
       );
       return NextResponse.json({ success: true, message: 'Lead updated', leadId: existingLead._id, isUpdate: true });
     } else {
@@ -83,6 +83,7 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get('limit') || '10');
   const status = searchParams.get('status');
   const service = searchParams.get('service');
+  const search = searchParams.get('search');
 
   try {
     const database = await getDatabase();
@@ -91,6 +92,14 @@ export async function GET(request: NextRequest) {
     const filter: any = {};
     if (status) filter.status = status;
     if (service) filter.interestedService = service;
+    if (search) {
+      filter.$or = [
+        { fullName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
+        { companyName: { $regex: search, $options: 'i' } },
+      ];
+    }
 
     const total = await leadsCollection.countDocuments(filter);
     const leads = await leadsCollection
