@@ -185,45 +185,36 @@ export default function ServicesPage() {
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
-    // Immediately load cached services from localStorage for instant rendering
-    try {
-      const cached = localStorage.getItem('cachedDbServices');
-      if (cached) {
-        setDbServices(JSON.parse(cached));
-      }
-    } catch {}
-    // Then fetch fresh data from API
     fetchServices();
   }, []);
 
   const fetchServices = async () => {
     try {
-      const timestamp = new Date().getTime();
-      const response = await fetch(`/api/services?t=${timestamp}`, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } });
+      const response = await fetch('/api/services', { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
       if (response.ok) {
         const data = await response.json();
         const servicesList = Array.isArray(data) ? data : [];
         setDbServices(servicesList);
-        // Cache to localStorage for instant load next time
-        try {
-          localStorage.setItem('cachedDbServices', JSON.stringify(servicesList));
-        } catch {}
       }
     } catch (error) {
       console.error('Error fetching services:', error);
     }
   };
 
-  // Combine hardcoded services with database services, ignoring blank database entries
-  const allServices = [...services, ...dbServices.filter((s:any) => s.name).map((service:any) => {
-    const slug = service.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    return {
-      title: service.name,
-      image: service.image || "/services-hero-bg.png",
-      description: service.description,
-      link: `/services/${slug}`
-    };
-  })];
+  // Use DB services as primary source; fall back to hardcoded only if DB is empty
+  const allServices = dbServices.length > 0
+    ? dbServices.filter((s: any) => s.name || s.title).map((service: any) => {
+        const name = service.name || service.title;
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        return {
+          title: name,
+          image: service.image || '/services-hero-bg.png',
+          description: service.description,
+          details: service.items || service.details || [],
+          link: `/services/${slug}`
+        };
+      })
+    : services;
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;

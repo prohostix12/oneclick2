@@ -178,57 +178,34 @@ function ProjectsContent() {
 
     const fetchDynamicProjects = async () => {
         try {
-            // Check cache first
-            const cachedProjects = sessionStorage.getItem('projectsCache');
-            const cacheTime = sessionStorage.getItem('projectsCacheTime');
-            const now = Date.now();
-            
-            // Use cache if it's less than 5 minutes old
-            if (cachedProjects && cacheTime && (now - parseInt(cacheTime)) < 300000) {
-                const cached = JSON.parse(cachedProjects);
-                setDynamicProjects(cached);
-                return;
-            }
-
-            // Fetch fresh data
-            const res = await fetch('/api/projects', { 
+            const res = await fetch('/api/projects', {
                 cache: 'no-store',
                 headers: { 'Cache-Control': 'no-cache' }
             });
-            
+
             if (res.ok) {
                 const data = await res.json();
                 if (data.projects && Array.isArray(data.projects)) {
-                    // Adapt dynamic projects to public interface
                     const adapted = data.projects
-                        .filter((p: any) => p && p.title) // Filter out invalid entries
+                        .filter((p: any) => p && p.title)
                         .map((p: any) => ({
-                            id: p.id || `dynamic-${Date.now()}-${Math.random()}`,
+                            id: p.id || p._id?.toString() || `dynamic-${Math.random()}`,
                             title: p.title,
                             description: p.description || 'No description available',
                             category: p.category || 'Uncategorized',
                             images: (p.images && p.images.length > 0) ? p.images : (p.image ? [p.image] : ['/projects-hero-bg.png']),
                             detailsTitle: p.title
                         }));
-                    
                     setDynamicProjects(adapted);
-                    
-                    // Cache the results
-                    try {
-                        sessionStorage.setItem('projectsCache', JSON.stringify(adapted));
-                        sessionStorage.setItem('projectsCacheTime', Date.now().toString());
-                    } catch (cacheError) {
-                        console.warn('Failed to cache projects:', cacheError);
-                    }
                 }
             }
         } catch (error) {
             console.error('Error fetching dynamic projects:', error);
-            // Don't show error to user, just continue with static projects
         }
     };
 
-    const combinedProjects = useMemo(() => [...ALL_PROJECTS, ...dynamicProjects], [dynamicProjects]);
+    // Use DB projects when available, fall back to static only if DB is empty
+    const combinedProjects = useMemo(() => dynamicProjects.length > 0 ? dynamicProjects : ALL_PROJECTS, [dynamicProjects]);
 
     const filteredProjects = useMemo(() => {
         return combinedProjects.filter(p => {
