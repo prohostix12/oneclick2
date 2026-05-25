@@ -542,15 +542,17 @@ function ProjectsContent() {
                 }
 
                 @media (max-width: 768px) {
-                    .hero-works { 
-                        height: auto; 
-                        min-height: 100svh; 
-                        padding: 120px 1.5rem 80px; 
-                        display: flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        flex-direction: column; 
+                    .hero-works {
+                        height: 100svh;
+                        height: 100vh;
+                        min-height: unset;
+                        padding: 120px 1.5rem 80px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
                         text-align: center;
+                        overflow: hidden;
                     }
                     .hero-works-content {
                         width: 100%;
@@ -591,7 +593,7 @@ function ProjectsContent() {
                     .category-nav { justify-content: center; flex-wrap: wrap; gap: 8px; }
                 }
                 @media (max-width: 480px) {
-                    .hero-works { min-height: 100svh !important; padding: 100px 1rem 40px !important; }
+                    .hero-works { height: 100svh !important; height: 100vh !important; min-height: unset !important; padding: 100px 1rem 40px !important; }
                     .hero-works-h1 { font-size: 1.85rem !important; }
                 }
 

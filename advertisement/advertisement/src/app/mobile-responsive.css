@@ -83,9 +83,9 @@ body {
   /* === HERO SECTION: Full Fix === */
   .hero-section {
     background-color: #111111 !important;
-    height: auto !important;
-    min-height: 100svh !important;
-    min-height: 100vh !important;
+    height: 100svh !important;
+    height: 100vh !important;
+    min-height: unset !important;
     padding: 140px 1.5rem 90px !important;
     text-align: center !important;
     width: 100% !important;
@@ -119,9 +119,12 @@ body {
     object-position: center !important;
   }
 
-  /* Projects and contact hero sections need overflow:hidden on mobile */
+  /* Projects and contact hero sections — same height as services on mobile */
   .hero-works,
   .contact-hero {
+    height: 100svh !important;
+    height: 100vh !important;
+    min-height: unset !important;
     overflow: hidden !important;
     position: relative !important;
   }
@@ -491,8 +494,11 @@ body {
 
 /* Landscape orientation on mobile */
 @media (max-width: 768px) and (orientation: landscape) {
-  .hero-section {
-    min-height: 70vh !important;
+  .hero-section,
+  .hero-works,
+  .contact-hero {
+    height: 100svh !important;
+    height: 100vh !important;
     padding-top: 100px !important;
   }
 

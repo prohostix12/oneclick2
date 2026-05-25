@@ -109,7 +109,12 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .toArray();
 
-    return NextResponse.json({ success: true, data: leads, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+    const interestStats = await leadsCollection.aggregate([
+      { $group: { _id: '$interestedService', count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]).toArray();
+
+    return NextResponse.json({ success: true, data: leads, pagination: { page, limit, total, pages: Math.ceil(total / limit) }, interestStats });
 
   } catch (error) {
     console.error('Error fetching leads:', error);

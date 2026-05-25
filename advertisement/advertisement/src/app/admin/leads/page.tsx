@@ -67,6 +67,7 @@ export default function LeadsPage() {
     search: ''
   });
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [interestStats, setInterestStats] = useState<{ _id: string; count: number }[]>([]);
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -92,6 +93,7 @@ export default function LeadsPage() {
       if (data.success) {
         setLeads(data.data);
         setPagination(data.pagination);
+        if (data.interestStats) setInterestStats(data.interestStats);
       }
     } catch (error) {
       console.error('Error fetching leads:', error);
@@ -244,6 +246,30 @@ export default function LeadsPage() {
             </div>
           </div>
         </div>
+
+        {/* Interest Breakdown */}
+        {interestStats.length > 0 && (
+          <div className="interest-breakdown">
+            <h3 className="interest-title">Enquiries by Interest</h3>
+            <div className="interest-pills">
+              <button
+                className={`interest-pill ${filters.service === 'All Services' ? 'active' : ''}`}
+                onClick={() => setFilters(prev => ({ ...prev, service: 'All Services' }))}
+              >
+                All <span className="pill-count">{pagination.total}</span>
+              </button>
+              {interestStats.map(stat => (
+                <button
+                  key={stat._id}
+                  className={`interest-pill ${filters.service === stat._id ? 'active' : ''}`}
+                  onClick={() => setFilters(prev => ({ ...prev, service: stat._id || 'All Services' }))}
+                >
+                  {stat._id || 'Unknown'} <span className="pill-count">{stat.count}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="filters-section">
@@ -577,6 +603,70 @@ export default function LeadsPage() {
         .stat-content p {
           color: rgba(255, 255, 255, 0.7);
           font-size: 0.9rem;
+        }
+
+        .interest-breakdown {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 1.25rem 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .interest-title {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 1rem;
+        }
+
+        .interest-pills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.6rem;
+        }
+
+        .interest-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.45rem 1rem;
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 20px;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.85rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+        }
+
+        .interest-pill:hover {
+          background: rgba(230, 30, 37, 0.15);
+          border-color: rgba(230, 30, 37, 0.4);
+          color: white;
+        }
+
+        .interest-pill.active {
+          background: #e61e25;
+          border-color: #e61e25;
+          color: white;
+          font-weight: 700;
+        }
+
+        .pill-count {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+          padding: 0.1rem 0.45rem;
+          font-size: 0.75rem;
+          font-weight: 700;
+        }
+
+        .interest-pill.active .pill-count {
+          background: rgba(255, 255, 255, 0.3);
         }
 
         .filters-section {

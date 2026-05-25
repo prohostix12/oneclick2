@@ -617,12 +617,14 @@ export default function AboutPage() {
 
         @media (max-width: 768px) {
           .hero-section {
-            height: auto;
-            min-height: 100svh;
+            height: 100svh;
+            height: 100vh;
+            min-height: unset;
             padding: 140px 1.5rem 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
           }
           .hero-content {
             text-align: center !important;

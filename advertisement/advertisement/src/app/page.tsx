@@ -381,14 +381,12 @@ export default function Home() {
           initial={isAdmin ? { opacity: 1, y: 0, scale: 0.45 } : { opacity: 0, y: 100, scale: 0 }}
           animate={{ opacity: 1, y: 0, scale: 0.45 }}
           transition={isAdmin ? { duration: 0 } : { delay: 1.5, type: "spring", stiffness: 260, damping: 20 }}
-          style={{ 
-            position: 'absolute', 
-            bottom: '1rem', 
-            right: '1rem', 
-            zIndex: 99999, 
+          style={{
+            position: 'fixed',
+            bottom: '1.5rem',
+            right: '1.5rem',
+            zIndex: 99999,
             pointerEvents: 'auto',
-            transformStyle: 'preserve-3d',
-            transform: 'translateZ(500px)',
             width: 'fit-content',
             margin: 0,
             left: 'auto',
@@ -400,16 +398,16 @@ export default function Home() {
             @media (max-width: 768px) {
               .claim-btn-floating-container {
                 right: 0.5rem !important;
-                bottom: 0.5rem !important;
-                transform: scale(0.35) translateZ(500px) !important;
+                bottom: 5.5rem !important;
+                transform: scale(0.38) !important;
                 transform-origin: bottom right;
               }
             }
             @media (max-width: 480px) {
               .claim-btn-floating-container {
-                right: 0 !important;
-                bottom: 0 !important;
-                transform: scale(0.25) translateZ(600px) !important;
+                right: 0.25rem !important;
+                bottom: 5rem !important;
+                transform: scale(0.32) !important;
                 transform-origin: bottom right;
               }
             }

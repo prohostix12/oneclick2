@@ -56,6 +56,8 @@ export default function Navbar() {
             borderRadius: '12px',
             boxShadow: '0 8px 32px rgba(12, 12, 12,0.4)',
             pointerEvents: 'all',
+            position: 'relative',
+            zIndex: 99999,
           }}
         >
           <div
@@ -94,13 +96,14 @@ export default function Navbar() {
               aria-label="Toggle Menu"
               className={styles.mobileToggle}
               style={{
-                display: 'none',
                 background: 'none',
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
                 padding: '6px',
                 borderRadius: '8px',
+                zIndex: 999999,
+                position: 'relative',
               }}
             >
               {isMobileMenuOpen ? <X size={26} color="white" /> : <Menu size={26} color="white" />}

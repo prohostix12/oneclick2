@@ -485,12 +485,14 @@ export default function ContactPage() {
         @media (max-width: 768px) {
           .contact-hero {
             padding: 80px 1.5rem 40px;
-            min-height: 100svh;
-            height: auto;
+            height: 100svh;
+            height: 100vh;
+            min-height: unset;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            overflow: hidden;
           }
           .contact-hero-content {
             gap: 1rem;
@@ -549,7 +551,9 @@ export default function ContactPage() {
         @media (max-width: 480px) {
           .contact-hero {
             padding: 80px 1rem 40px !important;
-            min-height: 100svh !important;
+            height: 100svh !important;
+            height: 100vh !important;
+            min-height: unset !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;

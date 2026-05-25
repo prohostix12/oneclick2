@@ -641,12 +641,14 @@ export default function ServicesPage() {
 
         @media (max-width: 768px) {
           .hero-services {
-            height: auto;
-            min-height: 100svh;
+            height: 100svh;
+            height: 100vh;
+            min-height: unset;
             padding: 140px 1.5rem 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
           }
 
           .hero-title {
@@ -699,7 +701,9 @@ export default function ServicesPage() {
 
         @media (max-width: 480px) {
           .hero-services {
-            min-height: 100svh !important;
+            height: 100svh !important;
+            height: 100vh !important;
+            min-height: unset !important;
             padding: 100px 1rem 40px !important;
           }
           .hero-title {
@@ -859,7 +863,6 @@ export default function ServicesPage() {
                     onClick={(e) => { e.stopPropagation(); setEnquireService(service.title); }}
                     style={{
                       alignSelf: 'flex-start',
-                      marginTop: 'auto',
                       marginBottom: '3.5rem',
                       padding: '0.65rem 1.5rem',
                       background: '#e61e25',
