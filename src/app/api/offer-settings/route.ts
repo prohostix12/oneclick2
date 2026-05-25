@@ -1,21 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
-import fs from 'fs';
-import path from 'path';
 
 const SETTINGS_ID = 'main_config';
-const SETTINGS_FILE = path.join(process.cwd(), 'data', 'offer-settings.json');
-
-function readLocalSettings(): any {
-  try {
-    if (!fs.existsSync(SETTINGS_FILE)) return null;
-    return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8'));
-  } catch { return null; }
-}
-
-function writeLocalSettings(data: any) {
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(data, null, 2));
-}
 
 const defaultSettings = {
   enabled: true,
@@ -35,9 +21,9 @@ export async function GET() {
     const db = await getDatabase();
     const settings = await db.collection('offer_settings').findOne({ configId: SETTINGS_ID });
     return NextResponse.json({ success: true, ...(settings || defaultSettings) });
-  } catch {
-    const local = readLocalSettings();
-    return NextResponse.json({ success: true, ...(local || defaultSettings) });
+  } catch (error) {
+    console.error('Error fetching offer settings:', error);
+    return NextResponse.json({ success: true, ...defaultSettings });
   }
 }
 
@@ -46,19 +32,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { _id, ...updateData } = body;
 
-    try {
-      const db = await getDatabase();
-      await db.collection('offer_settings').updateOne(
-        { configId: SETTINGS_ID },
-        { $set: { ...updateData, configId: SETTINGS_ID } },
-        { upsert: true }
-      );
-    } catch {
-      writeLocalSettings(updateData);
-    }
+    const db = await getDatabase();
+    await db.collection('offer_settings').updateOne(
+      { configId: SETTINGS_ID },
+      { $set: { ...updateData, configId: SETTINGS_ID } },
+      { upsert: true }
+    );
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('Error saving offer settings:', error);
     return NextResponse.json({ success: false, error: 'Failed to save settings' }, { status: 500 });
   }
 }

@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MongoClient, Db } from 'mongodb';
-import fs from 'fs';
-import path from 'path';
-
-const LEADS_FILE = path.join(process.cwd(), 'data', 'leads.json');
-
-function readLocalLeads(): any[] {
-  try {
-    if (!fs.existsSync(LEADS_FILE)) return [];
-    return JSON.parse(fs.readFileSync(LEADS_FILE, 'utf-8'));
-  } catch { return []; }
-}
-
-function writeLocalLeads(leads: any[]) {
-  const dir = path.dirname(LEADS_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
-}
+import { getDatabase } from '@/lib/mongodb';
 
 interface LeadData {
   fullName: string;
@@ -26,31 +9,6 @@ interface LeadData {
   interestedService: string;
   submittedAt: string;
   source: string;
-}
-
-let client: MongoClient | null = null;
-let db: Db | null = null;
-
-async function connectToDatabase() {
-  if (db) {
-    return db;
-  }
-
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable is not defined');
-  }
-
-  try {
-    client = new MongoClient(uri);
-    await client.connect();
-    db = client.db('advertisement');
-    console.log('Connected to MongoDB');
-    return db;
-  } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
-    throw error;
-  }
 }
 
 export async function POST(request: NextRequest) {
@@ -94,37 +52,19 @@ export async function POST(request: NextRequest) {
       submittedAt: body.submittedAt || new Date().toISOString(),
     };
 
-    // Try MongoDB first, fall back to local JSON file
-    try {
-      const database = await connectToDatabase();
-      const leadsCollection = database.collection('leads');
-      const existingLead = await leadsCollection.findOne({ email: email.toLowerCase() });
+    const database = await getDatabase();
+    const leadsCollection = database.collection('leads');
+    const existingLead = await leadsCollection.findOne({ email: email.toLowerCase() });
 
-      if (existingLead) {
-        await leadsCollection.updateOne(
-          { email: email.toLowerCase() },
-          { $set: { ...leadData, updatedAt: new Date().toISOString(), status: 'updated' } }
-        );
-        return NextResponse.json({ success: true, message: 'Lead updated', leadId: existingLead._id, isUpdate: true });
-      } else {
-        const result = await leadsCollection.insertOne(leadData);
-        return NextResponse.json({ success: true, message: 'Lead captured', leadId: result.insertedId, isUpdate: false });
-      }
-    } catch (dbError) {
-      console.warn('MongoDB unavailable, saving to local file:', (dbError as Error).message);
-
-      // Local JSON fallback
-      const leads = readLocalLeads();
-      const existing = leads.findIndex((l: any) => l.emailLower === email.toLowerCase());
-      const newLead = { ...leadData, _id: Date.now().toString() };
-
-      if (existing >= 0) {
-        leads[existing] = { ...leads[existing], ...newLead, status: 'updated' };
-      } else {
-        leads.push(newLead);
-      }
-      writeLocalLeads(leads);
-      return NextResponse.json({ success: true, message: 'Lead captured', leadId: newLead._id, isUpdate: existing >= 0 });
+    if (existingLead) {
+      await leadsCollection.updateOne(
+        { email: email.toLowerCase() },
+        { $set: { ...leadData, updatedAt: new Date().toISOString(), status: 'updated' } }
+      );
+      return NextResponse.json({ success: true, message: 'Lead updated', leadId: existingLead._id, isUpdate: true });
+    } else {
+      const result = await leadsCollection.insertOne(leadData);
+      return NextResponse.json({ success: true, message: 'Lead captured', leadId: result.insertedId, isUpdate: false });
     }
 
   } catch (error) {
@@ -141,7 +81,7 @@ export async function GET(request: NextRequest) {
   const service = searchParams.get('service');
 
   try {
-    const database = await connectToDatabase();
+    const database = await getDatabase();
     const leadsCollection = database.collection('leads');
 
     const filter: any = {};
@@ -158,27 +98,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: leads, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 
-  } catch (dbError) {
-    console.warn('MongoDB unavailable, reading from local file');
-
-    // Local JSON fallback
-    let leads = readLocalLeads();
-    if (status) leads = leads.filter((l: any) => l.status === status);
-    if (service) leads = leads.filter((l: any) => l.interestedService === service);
-    leads.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    const total = leads.length;
-    const paginated = leads.slice((page - 1) * limit, page * limit);
-
-    return NextResponse.json({ success: true, data: paginated, pagination: { page, limit, total, pages: Math.ceil(total / limit) }, source: 'local' });
+  } catch (error) {
+    console.error('Error fetching leads:', error);
+    return NextResponse.json({ error: 'Failed to fetch leads' }, { status: 500 });
   }
 }
-
-// Cleanup function for graceful shutdown
-process.on('SIGINT', async () => {
-  if (client) {
-    await client.close();
-    console.log('MongoDB connection closed');
-  }
-  process.exit(0);
-});

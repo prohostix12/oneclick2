@@ -5,7 +5,14 @@ if (!process.env.DATABASE_URL) {
 }
 
 const uri = process.env.DATABASE_URL;
-const options = {};
+const options = {
+  maxPoolSize: 10,
+  minPoolSize: 2,
+  maxIdleTimeMS: 45000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  waitQueueTimeoutMS: 10000,
+};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
@@ -28,6 +35,13 @@ if (process.env.NODE_ENV === 'development') {
 export default clientPromise;
 
 export async function getDatabase(): Promise<Db> {
-  const client = await clientPromise;
-  return client.db();
+  try {
+    const client = await clientPromise;
+    // Verify connection is healthy
+    await client.db('admin').command({ ping: 1 });
+    return client.db('advertisement');
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw new Error('Failed to connect to database');
+  }
 }
