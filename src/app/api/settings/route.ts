@@ -1,28 +1,15 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getDatabase } from '@/lib/mongodb';
 
-const SETTINGS_FILE = path.join(process.cwd(), 'data', 'settings.json');
-
-function readSettings() {
-  try {
-    if (!fs.existsSync(SETTINGS_FILE)) return null;
-    return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8'));
-  } catch {
-    return null;
-  }
-}
-
-function writeSettings(settings: any) {
-  const dir = path.dirname(SETTINGS_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
-}
+const CONFIG_ID = 'main_settings';
 
 export async function GET() {
   try {
-    const s = readSettings();
-    return NextResponse.json(s || {});
+    const db = await getDatabase();
+    const settings = await db.collection('settings').findOne({ configId: CONFIG_ID });
+    if (!settings) return NextResponse.json({});
+    const { _id, configId, ...data } = settings;
+    return NextResponse.json(data);
   } catch (e) {
     console.error('GET /api/settings error', e);
     return NextResponse.json({}, { status: 500 });
@@ -37,7 +24,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'email, phone, and location are required' }, { status: 400 });
     }
     const settings = { email, phone, location };
-    writeSettings(settings);
+    const db = await getDatabase();
+    await db.collection('settings').updateOne(
+      { configId: CONFIG_ID },
+      { $set: { ...settings, configId: CONFIG_ID } },
+      { upsert: true }
+    );
     return NextResponse.json({ success: true, settings });
   } catch (e) {
     console.error('POST /api/settings error', e);
