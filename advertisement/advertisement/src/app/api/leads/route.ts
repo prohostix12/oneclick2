@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface LeadData {
   fullName: string;
@@ -101,5 +105,28 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching leads:', error);
     return NextResponse.json({ error: 'Failed to fetch leads' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+  }
+
+  try {
+    const database = await getDatabase();
+    const result = await database.collection('leads').deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Lead deleted' });
+  } catch (error) {
+    console.error('Error deleting lead:', error);
+    return NextResponse.json({ error: 'Failed to delete lead' }, { status: 500 });
   }
 }

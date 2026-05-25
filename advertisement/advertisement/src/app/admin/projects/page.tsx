@@ -20,62 +20,6 @@ import {
 import Link from 'next/link';
 import AdminFooter from '../components/AdminFooter';
 
-const ALL_PROJECTS: Project[] = [
-    {
-        id: 'def-1',
-        title: 'Brand Identity Showcase',
-        description: 'Complete visual identity transformation featuring premium logo design, color theory application, and comprehensive brand guidelines for a global corporate client.',
-        category: 'Brand Identity',
-        image: '/signage-branding.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    },
-    {
-        id: 'def-2',
-        title: 'Digital Printing Excellence',
-        description: 'High-precision large format printing for luxury retail displays, capturing vibrant colors and sharp details to maximize visual pull in high-traffic shopping malls.',
-        category: 'Digital Printing',
-        image: '/signage-digital-print.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    },
-    {
-        id: 'def-3',
-        title: 'Premium Vehicle Wraps',
-        description: 'State-of-the-art vehicle branding for commercial fleets, using high-durability vinyl to ensure long-lasting brand visibility across the UAE.',
-        category: 'Vehicle Branding',
-        image: '/signage-vehicle.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    },
-    {
-        id: 'def-4',
-        title: 'Strategic Signage Systems',
-        description: 'High-visibility 3D LED signage installations designed for maximum impact in premium commercial districts, ensuring your brand stays visible 24/7.',
-        category: 'Signage',
-        image: '/signage-production.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    },
-    {
-        id: 'def-5',
-        title: 'POS Display Solutions',
-        description: 'Custom-designed point-of-sale displays focused on driving customer engagement and maximizing product visibility in competitive retail settings.',
-        category: 'Display Solutions',
-        image: '/signage-exhibition.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    },
-    {
-        id: 'def-6',
-        title: 'Architectural Facades',
-        description: 'Premium building facade solutions combining high-quality ACP cladding with integrated signage to create a powerful architectural identity.',
-        category: 'Facade & Cladding',
-        image: '/signage-cladding.png',
-        status: 'published',
-        createdAt: new Date().toISOString()
-    }
-];
 
 interface Project {
     id: string;
@@ -249,7 +193,7 @@ export default function AdminProjectsPage() {
         setIsEditModalOpen(true);
     };
 
-    const allProjects = [...(projects || []), ...ALL_PROJECTS];
+    const allProjects = projects || [];
 
     const filteredProjects = allProjects.filter(p => {
         const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 

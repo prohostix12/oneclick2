@@ -2,17 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Users, 
-  Mail, 
-  Phone, 
-  Building, 
-  Calendar, 
-  Filter, 
+import { useRouter } from 'next/navigation';
+import {
+  Users,
+  Mail,
+  Phone,
+  Building,
+  Calendar,
+  Filter,
   Download,
   Eye,
   Search,
-  RefreshCw
+  RefreshCw,
+  Trash2
 } from 'lucide-react';
 
 interface Lead {
@@ -50,6 +52,7 @@ const services = [
 const statuses = ['all', 'new', 'contacted', 'qualified', 'converted', 'closed'];
 
 export default function LeadsPage() {
+  const router = useRouter();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<PaginationInfo>({
@@ -95,6 +98,13 @@ export default function LeadsPage() {
   };
 
   useEffect(() => {
+    const auth = localStorage.getItem('adminAuth');
+    const userStr = localStorage.getItem('adminUser');
+    const user = userStr ? JSON.parse(userStr) : null;
+    if (auth !== 'true' || user?.email !== 'admin@gmail.com') {
+      router.push('/admin/login');
+      return;
+    }
     fetchLeads();
   }, [pagination.page, filters.status, filters.service]);
 
@@ -121,6 +131,21 @@ export default function LeadsPage() {
       closed: '#6b7280'
     };
     return colors[status as keyof typeof colors] || '#6b7280';
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this lead?')) return;
+    try {
+      const res = await fetch(`/api/leads?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setLeads(prev => prev.filter(l => l._id !== id));
+        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+        if (selectedLead?._id === id) setSelectedLead(null);
+      }
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+    }
   };
 
   const exportLeads = () => {
@@ -330,13 +355,21 @@ export default function LeadsPage() {
                         </div>
                       </td>
                       <td>
-                        <button
-                          className="view-btn"
-                          onClick={() => setSelectedLead(lead)}
-                        >
-                          <Eye size={16} />
-                          View
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button
+                            className="view-btn"
+                            onClick={() => setSelectedLead(lead)}
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(lead._id)}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}
@@ -688,6 +721,26 @@ export default function LeadsPage() {
 
         .view-btn:hover {
           background: #ff2d35;
+        }
+
+        .delete-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.5rem;
+          background: rgba(239, 68, 68, 0.15);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          border-radius: 6px;
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+          background: #ef4444;
+          color: white;
+          border-color: #ef4444;
         }
 
         .loading-state, .empty-state {

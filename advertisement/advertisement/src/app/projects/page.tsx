@@ -266,6 +266,7 @@ function ProjectsContent() {
     };
 
     return (
+        <>
         <div style={{ background: 'rgba(18, 18, 18, 0.98)', minHeight: '100vh', color: 'white', backdropFilter: 'blur(10px)', overflow: 'hidden' }}>
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap');
@@ -947,20 +948,22 @@ function ProjectsContent() {
 
 
 
-            {isScratchCardOpen && (
-                <PremiumScratchCard
-                    onClose={() => setIsScratchCardOpen(false)}
-                />
-            )}
-
-            {enquireProject && (
-                <EnquireNowModal
-                    serviceName={enquireProject}
-                    source="projects-page"
-                    onClose={() => setEnquireProject(null)}
-                />
-            )}
         </div>
+
+        {isScratchCardOpen && (
+            <PremiumScratchCard
+                onClose={() => setIsScratchCardOpen(false)}
+            />
+        )}
+
+        {enquireProject && (
+            <EnquireNowModal
+                serviceName={enquireProject}
+                source="projects-page"
+                onClose={() => setEnquireProject(null)}
+            />
+        )}
+        </>
     );
 }
 

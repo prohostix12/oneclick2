@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const CONFIG_ID = 'main_settings';
 
 export async function GET() {

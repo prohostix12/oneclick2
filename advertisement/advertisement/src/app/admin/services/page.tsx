@@ -17,15 +17,6 @@ interface Service {
     createdAt?: string;
 }
 
-const frontendServices = [
-  { _id: "f-1", name: "Branding & Corporate Identity", image: "/signage-branding.png", description: "Brand implementation, rollout & corporate identity applications", category: "Branding" },
-  { _id: "f-2", name: "Digital Printed Graphics", image: "/signage-digital-print.png", description: "Large format printing & interior graphics", category: "Digital Printing" },
-  { _id: "f-3", name: "Vehicle Graphics & Fleet Branding", image: "/signage-vehicle.png", description: "Full & partial vehicle wraps for mobile advertising", category: "Vehicle Branding" },
-  { _id: "f-4", name: "Signage Production & Installation", image: "/signage-production.png", description: "Indoor & outdoor signage solutions", category: "Signage" },
-  { _id: "f-5", name: "Exhibition, Display & POS", image: "/signage-exhibition.png", description: "Exhibition stands, kiosks & point of sale displays", category: "Display Solutions" },
-  { _id: "f-6", name: "Cladding & Facade Solutions", image: "/signage-cladding.png", description: "ACP cladding & architectural facade branding", category: "Facade & Cladding" },
-  { _id: "f-7", name: "Premium Outdoor Media", image: "/services-hero-bg.png", description: "High-quality outdoor signage & large format billboards", category: "Outdoor Media" },
-];
 
 export default function ServicesPage() {
     const router = useRouter();
@@ -62,12 +53,6 @@ export default function ServicesPage() {
             return;
         }
         setIsAuthorized(true);
-        
-        // Immediately show static services and set loading to false
-        setServices([...frontendServices] as any);
-        setIsLoading(false);
-        
-        // Fetch dynamic services in background without blocking UI
         fetchServices();
     }, [router]);
 
@@ -77,54 +62,18 @@ export default function ServicesPage() {
 
     async function fetchServices() {
         try {
-            // Check cache first
-            const cachedServices = sessionStorage.getItem('adminServicesCache');
-            const cacheTime = sessionStorage.getItem('adminServicesCacheTime');
-            const now = Date.now();
-            
-            // Use cache if it's less than 2 minutes old
-            if (cachedServices && cacheTime && (now - parseInt(cacheTime)) < 120000) {
-                const cached = JSON.parse(cachedServices);
-                const combined = [...frontendServices];
-                cached.forEach((api: any) => {
-                    if (!combined.some(f => f.name.toLowerCase() === api.name.toLowerCase())) {
-                        combined.push(api);
-                    }
-                });
-                setServices(combined);
-                return;
-            }
-
-            const timestamp = new Date().getTime();
-            const response = await fetch(`/api/services?t=${timestamp}`, { 
-                cache: 'no-store', 
-                headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } 
+            const response = await fetch(`/api/services?t=${Date.now()}`, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
             });
-            
             if (response.ok) {
                 const data = await response.json();
-                const apiServices = Array.isArray(data) ? data.filter((s: any) => s && s.name) : [];
-                
-                // Merge static and api services, avoid duplicates by name
-                const combined = [...frontendServices];
-                apiServices.forEach((api: any) => {
-                    if (!combined.some(f => f.name.toLowerCase() === api.name.toLowerCase())) {
-                        combined.push(api);
-                    }
-                });
-                setServices(combined);
-                
-                // Cache the API services only
-                try {
-                    sessionStorage.setItem('adminServicesCache', JSON.stringify(apiServices));
-                    sessionStorage.setItem('adminServicesCacheTime', Date.now().toString());
-                } catch (cacheError) {
-                    console.warn('Failed to cache services:', cacheError);
-                }
+                setServices(Array.isArray(data) ? data.filter((s: any) => s && s.name) : []);
             }
         } catch (error) {
             console.error('Error fetching services:', error);
-            // Keep static services on error
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -144,9 +93,6 @@ export default function ServicesPage() {
                 setFormData({ name: '', description: '', category: '', image: '', items: ['', '', '', ''] });
                 setSuccessMessage('Service added successfully!');
                 setTimeout(() => setSuccessMessage(''), 3000);
-                // Clear cache so new service shows up
-                sessionStorage.removeItem('adminServicesCache');
-                sessionStorage.removeItem('adminServicesCacheTime');
                 fetchServices();
             } else {
                 const err = await response.json().catch(() => ({}));
@@ -178,8 +124,6 @@ export default function ServicesPage() {
                 setEditingService(null);
                 setSuccessMessage('Service updated successfully!');
                 setTimeout(() => setSuccessMessage(''), 3000);
-                sessionStorage.removeItem('adminServicesCache');
-                sessionStorage.removeItem('adminServicesCacheTime');
                 fetchServices();
             } else {
                 const err = await response.json().catch(() => ({}));

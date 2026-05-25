@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 import { ObjectId, Db } from 'mongodb';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface BlogPost {
     title: string;
     excerpt: string;

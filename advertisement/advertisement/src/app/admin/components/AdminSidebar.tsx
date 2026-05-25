@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Home, LogOut, MessageSquare, Briefcase, TrendingUp, Menu, X, Layout, Users, Gift, Globe } from 'lucide-react';
+import { Home, LogOut, MessageSquare, Briefcase, TrendingUp, Menu, X, Layout, Users, Gift, Globe, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -160,8 +160,14 @@ export default function AdminSidebar() {
                 </Link>
                 <Link href="/admin/contacts" style={{ textDecoration: 'none' }} onClick={() => setIsMobileMenuOpen(false)}>
                     <div style={getNavItemStyle('/admin/contacts')}>
-                        <MessageSquare size={20} color={getNavIconColor('/admin/contacts')} /> 
+                        <MessageSquare size={20} color={getNavIconColor('/admin/contacts')} />
                         <span style={getNavTextStyle('/admin/contacts')}>Contact Forms</span>
+                    </div>
+                </Link>
+                <Link href="/admin/leads" style={{ textDecoration: 'none' }} onClick={() => setIsMobileMenuOpen(false)}>
+                    <div style={getNavItemStyle('/admin/leads')}>
+                        <ClipboardList size={20} color={getNavIconColor('/admin/leads')} />
+                        <span style={getNavTextStyle('/admin/leads')}>Enquiry Leads</span>
                     </div>
                 </Link>
                 <Link href="/admin/interactive-offers" style={{ textDecoration: 'none' }} onClick={() => setIsMobileMenuOpen(false)}>

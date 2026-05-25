@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.DATABASE_URL || "mongodb+srv://project_db_user:yLtS5VhXfPvziVZP@cluster0.8gdtuxs.mongodb.net/advertisement?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.DATABASE_URL || "mongodb+srv://oneclick:oneclick@cluster0.0p19qlw.mongodb.net/advertisement?appName=Cluster0";
 
 async function main() {
     console.log('Connecting to MongoDB...');
@@ -106,51 +106,75 @@ async function main() {
         console.log('Seeding projects...');
         const projects = [
             {
-                title: "Dubai Mall Expansion",
-                client: "Emaar Properties",
-                category: "Retail",
-                description: "Complete signage and wayfinding system for the new wing",
-                image: "/images/project-1.jpg",
-                year: 2024,
-                location: "Dubai, UAE",
-                services: ["Digital Signage", "Wayfinding", "LED Displays"],
-                featured: true,
+                title: "Brand Identity Showcase",
+                description: "Complete visual identity transformation featuring premium logo design, color theory application, and comprehensive brand guidelines for a global corporate client.",
+                category: "Brand Identity",
+                images: ["/signage-branding.png", "/about-hero-bg.png"],
+                status: "published",
                 createdAt: new Date()
             },
             {
-                title: "Emirates Towers Facade",
-                client: "Emirates Group",
-                category: "Corporate",
-                description: "LED facade transformation with dynamic content display",
-                image: "/images/project-2.jpg",
-                year: 2024,
-                location: "Dubai, UAE",
-                services: ["Digital Facade", "LED Installation", "Content Management"],
-                featured: true,
+                title: "Digital Printing Excellence",
+                description: "High-precision large format printing for luxury retail displays, capturing vibrant colors and sharp details to maximize visual pull in high-traffic shopping malls.",
+                category: "Digital Printing",
+                images: ["/signage-digital-print.png", "/services-hero-bg.png"],
+                status: "published",
                 createdAt: new Date()
             },
             {
-                title: "Luxury Fleet Branding",
-                client: "Al Tayer Motors",
-                category: "Automotive",
-                description: "Complete fleet wrap for 50+ luxury vehicles",
-                image: "/images/project-3.jpg",
-                year: 2023,
-                location: "Dubai, UAE",
-                services: ["Vehicle Wrapping", "Fleet Branding", "RTA Approval"],
-                featured: true,
+                title: "Indoor Creative Displays",
+                description: "Innovative indoor banner solutions for corporate environments, utilizing premium materials and high-definition printing to deliver clear and professional brand messaging.",
+                category: "Digital Printing",
+                images: ["/signage-exhibition.png", "https://i.pinimg.com/736x/c0/d4/de/c0d4de585c6bcff79eeb27a950e60112.jpg"],
+                status: "published",
                 createdAt: new Date()
             },
             {
-                title: "City Walk Retail",
-                client: "Meraas",
-                category: "Retail",
-                description: "Outdoor advertising and retail signage",
-                image: "/images/project-4.jpg",
-                year: 2023,
-                location: "Dubai, UAE",
-                services: ["Outdoor Signage", "Retail Branding", "Installation"],
-                featured: false,
+                title: "Premium Vehicle Wraps",
+                description: "State-of-the-art vehicle branding for commercial fleets, using high-durability vinyl to ensure long-lasting brand visibility across the UAE.",
+                category: "Vehicle Branding",
+                images: ["/signage-vehicle.png", "https://lirp.cdn-website.com/08d904d8/dms3rep/multi/opt/fleet+wraps+roseville-1920w.jpg"],
+                status: "published",
+                createdAt: new Date()
+            },
+            {
+                title: "Strategic Signage Systems",
+                description: "High-visibility 3D LED signage installations designed for maximum impact in premium commercial districts, ensuring your brand stays visible 24/7.",
+                category: "Signage",
+                images: ["/signage-cladding.png", "/services-hero-bg.png"],
+                status: "published",
+                createdAt: new Date()
+            },
+            {
+                title: "Commercial Wayfinding",
+                description: "Comprehensive wayfinding and directional signage solutions for large-scale developments, merging functionality with sophisticated design.",
+                category: "Signage",
+                images: ["/projects-hero-bg.png", "/signage-production.png"],
+                status: "published",
+                createdAt: new Date()
+            },
+            {
+                title: "POS Display Solutions",
+                description: "Custom-designed point-of-sale displays focused on driving customer engagement and maximizing product visibility in competitive retail settings.",
+                category: "Display Solutions",
+                images: ["/signage-exhibition.png", "/about-hero-bg.png"],
+                status: "published",
+                createdAt: new Date()
+            },
+            {
+                title: "Architectural Facades",
+                description: "Premium building facade solutions combining high-quality ACP cladding with integrated signage to create a powerful architectural identity.",
+                category: "Facade & Cladding",
+                images: ["/signage-cladding.png", "/signage-branding.png"],
+                status: "published",
+                createdAt: new Date()
+            },
+            {
+                title: "Frosted Glass Sticker Design",
+                description: "Premium frosted glass vinyl sticker solutions for offices, storefronts, and conference rooms. Our precision-cut frosted films combine elegant privacy with striking brand visibility, featuring custom logo etchings, decorative patterns, and sandblasted effects that transform ordinary glass into sophisticated branding surfaces.",
+                category: "Frosted Glass Sticker",
+                images: ["/frosted-glass-4.png", "/frosted-glass-5.png", "/frosted-glass-1.png"],
+                status: "published",
                 createdAt: new Date()
             }
         ];
@@ -160,69 +184,51 @@ async function main() {
         console.log('Seeding services...');
         const services = [
             {
-                title: "Architectural Signage",
-                description: "AI-optimized physical signage solutions that withstand the UAE climate while maintaining premium aesthetics.",
-                icon: "ShieldCheck",
-                details: ["3D Fabricated Letters", "Wayfinding Systems", "Industrial Cladding", "Monument Signs", "Pylon Signs"],
-                category: "Physical",
-                price: "Starting from AED 5,000",
-                duration: "2-4 weeks",
-                image: "/images/service-1.jpg",
+                name: "Branding & Corporate Identity",
+                description: "We'll help you create a look that people remember. No more generic designs—just a brand that feels like you.",
+                category: "Branding",
+                image: "/signage-branding.png",
+                items: ["Professional logos", "Brand identity guides", "Office & interior branding", "Consistent look across all locations"],
                 createdAt: new Date()
             },
             {
-                title: "Digital Facades",
-                description: "High-resolution LED screens and dynamic surfaces integrated with your building's architecture.",
-                icon: "Target",
-                details: ["Transparent LED Glass", "Outdoor Video Walls", "Architectural Lighting", "Media Facades", "Interactive Displays"],
-                category: "Digital",
-                price: "Starting from AED 50,000",
-                duration: "4-8 weeks",
-                image: "/images/service-2.jpg",
+                name: "Digital Printed Graphics",
+                description: "High-resolution prints that look sharp from across the street. Perfect for windows and massive banners.",
+                category: "Digital Printing",
+                image: "/signage-digital-print.png",
+                items: ["Large format printing", "Wall & window graphics", "Privacy films", "Stickers & floor graphics", "Custom wallpaper"],
                 createdAt: new Date()
             },
             {
-                title: "Fleet Branding",
-                description: "Complete transformation of your corporate fleet using RTA-approved premium wrapping materials.",
-                icon: "Car",
-                details: ["Full Body Wraps", "RTA Approval Management", "Protective Laminates", "Fleet Design", "Installation & Warranty"],
-                category: "Transformation",
-                price: "Starting from AED 3,000 per vehicle",
-                duration: "1-2 weeks",
-                image: "/images/service-3.jpg",
+                name: "Vehicle Graphics & Fleet Branding",
+                description: "Turn your car, van, or truck into a mobile billboard. One of the best ways to get seen all over the city.",
+                category: "Vehicle Branding",
+                image: "/signage-vehicle.png",
+                items: ["Full & partial wraps", "Corporate fleet branding", "Safety & reflective graphics", "Mobile advertising"],
                 createdAt: new Date()
             },
             {
-                title: "Digital Printing",
-                description: "Large format printing for indoor and outdoor applications with UV-resistant materials.",
-                icon: "Printer",
-                details: ["Banner Printing", "Wall Graphics", "Window Graphics", "Floor Graphics", "Exhibition Graphics"],
-                category: "Printing",
-                price: "Starting from AED 500",
-                duration: "3-5 days",
-                image: "/images/service-4.jpg",
+                name: "Exhibition, Display & POS Solutions",
+                description: "Indoor, outdoor, or glowing neon. We use tough materials that handle the UAE sun without fading.",
+                category: "Display Solutions",
+                image: "/signage-production.png",
+                items: ["Outdoor signboards", "Indoor office signs", "3D illuminated letters", "Wayfinding signs", "Retail & mall signage"],
                 createdAt: new Date()
             },
             {
-                title: "Exhibition & Events",
-                description: "Complete exhibition stand design, fabrication, and installation services.",
-                icon: "Presentation",
-                details: ["Stand Design", "Fabrication", "Installation", "Graphics", "Audio Visual"],
-                category: "Events",
-                price: "Starting from AED 10,000",
-                duration: "2-3 weeks",
-                image: "/images/service-5.jpg",
+                name: "Signage Production & Installation",
+                description: "Exhibition booths and kiosks that make people want to walk over and say hi.",
+                category: "Signage",
+                image: "/signage-exhibition.png",
+                items: ["Custom exhibition stands", "Portable kiosks", "Pop-up backdrops", "Roll-up banners", "In-store displays"],
                 createdAt: new Date()
             },
             {
-                title: "Neon & LED Signs",
-                description: "Custom neon and LED signage for retail, hospitality, and entertainment venues.",
-                icon: "Lightbulb",
-                details: ["Custom Neon", "LED Channel Letters", "Backlit Signs", "RGB Lighting", "Smart Controls"],
-                category: "Lighting",
-                price: "Starting from AED 2,000",
-                duration: "1-3 weeks",
-                image: "/images/service-6.jpg",
+                name: "Cladding & Facade Solutions",
+                description: "Give your building a fresh, modern look. Turning old storefronts into local landmarks.",
+                category: "Facade & Cladding",
+                image: "/signage-cladding.png",
+                items: ["ACP cladding", "Aluminum paneling", "Shopfront branding", "Modern architectural finishes", "Integrated signage"],
                 createdAt: new Date()
             }
         ];
@@ -271,13 +277,12 @@ async function main() {
         await db.collection('team').insertMany(team);
 
         console.log('✅ Successfully seeded all data to MongoDB!');
-        console.log('Collections created:');
-        console.log('- contacts:', contacts.length);
-        console.log('- testimonials:', testimonials.length);
-        console.log('- industries:', industries.length);
-        console.log('- projects:', projects.length);
-        console.log('- services:', services.length);
-        console.log('- team:', team.length);
+        console.log(`- contacts: ${contacts.length}`);
+        console.log(`- testimonials: ${testimonials.length}`);
+        console.log(`- industries: ${industries.length}`);
+        console.log(`- projects: ${projects.length}`);
+        console.log(`- services: ${services.length}`);
+        console.log(`- team: ${team.length}`);
 
     } catch (error) {
         console.error('Error seeding database:', error);
