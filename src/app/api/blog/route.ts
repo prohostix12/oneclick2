@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { ObjectId, Db } from 'mongodb';
 
 interface BlogPost {
     title: string;
@@ -61,7 +61,7 @@ const defaultPosts: BlogPost[] = [
     }
 ];
 
-async function seedIfEmpty(db: Awaited<ReturnType<typeof import('@/lib/mongodb').getDatabase>>) {
+async function seedIfEmpty(db: Db) {
     const count = await db.collection('blog_posts').countDocuments();
     if (count === 0) {
         const posts = defaultPosts.map(p => ({ ...p, createdAt: new Date() }));
